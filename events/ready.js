@@ -5,6 +5,7 @@ const {promisify} = require ('util');
 module.exports = {
   name:'ready',
   async run(client,prefix){
+    console.log('bot ready')
     client.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
     const wait = promisify(setTimeout);
     const er = new Collection();
@@ -20,9 +21,10 @@ setInterval(async () => {
     const runsdata = runsjson.data;
    runsdata.forEach(run => client.runs.set(run.id,run))
    
-  const newruns = client.runs.difference(er)
-console.log(runsdata[0])
+  const newruns = client.runs.filter(x => !er.has(x.id));
+
   if(newruns.first()){
+    console.log(newruns.first())
     newruns.forEach(async newrun =>{
     let level='';
     let lvlid;
@@ -34,7 +36,7 @@ console.log(runsdata[0])
    const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`)
    const gamejson = await gameres.json()
    const game = gamejson.data.names.international
-   
+
    const cover = gamejson.data.assets['cover-large'].uri
    const categoryres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}`)
    const categoryjson = await categoryres.json()
@@ -74,17 +76,19 @@ console.log(runsdata[0])
           if(dbgame.includes(gamejson.data.id)){
 
             channel.send(embed)
-          
+          console.log('ye boi')
           }
         }
       }
     });
       
     })
-    client.runs.forEach(run=> er.set(run.id,run));
-
   }
-   
+   client.runs.forEach(run=> er.set(run.id,run));
+   er.forEach(x => {
+     if(!client.runs.has(x.id)) er.delete(x.id)
+   })
+
 },60000);
 
   }
