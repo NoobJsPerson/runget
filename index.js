@@ -46,7 +46,7 @@ function walk(dir, collection, callback) {
             var filepath = path.join(dir, file);
             fs.stat(filepath, function(err,stats) {
                 if (stats.isDirectory()) {
-                    walk(filepath, callback);
+                    walk(filepath, collection, callback);
                 } else if (stats.isFile() && file.endsWith('.js')) {
                     let props = require(`./${filepath}`);
                     console.log(`Loading Command: ${props.name} ✔`);
