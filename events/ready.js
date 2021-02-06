@@ -81,9 +81,10 @@ console.log(runsdata[0])
     });
       
     })
-  }
-   client.runs.forEach(run=> er.set(run.id,run));
+    client.runs.forEach(run=> er.set(run.id,run));
 
+  }
+   
 },60000);
 
   }
