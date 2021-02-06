@@ -34,7 +34,7 @@ console.log(runsdata[0])
    const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`)
    const gamejson = await gameres.json()
    const game = gamejson.data.names.international
-   if(game == 'Apple Kight') console.log(game)
+   
    const cover = gamejson.data.assets['cover-large'].uri
    const categoryres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}`)
    const categoryjson = await categoryres.json()
@@ -74,7 +74,7 @@ console.log(runsdata[0])
           if(dbgame.includes(gamejson.data.id)){
 
             channel.send(embed)
-          console.log('ye boi')
+          
           }
         }
       }
