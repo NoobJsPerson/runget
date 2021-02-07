@@ -1,13 +1,11 @@
 const {Collection,MessageEmbed} = require ('discord.js');
 const db = require ('quick.db');
 const fetch = require('node-fetch');
-const {promisify} = require ('util');
 module.exports = {
   name:'ready',
   async run(client,prefix){
     console.log('bot ready')
     client.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
-    const wait = promisify(setTimeout);
     const er = new Collection();
        
 
