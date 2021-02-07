@@ -21,6 +21,10 @@ setInterval(async () => {
     
     const runsdata = runsjson.data;
     //fetching newly verified runs
+ client.runs.forEach(x => {
+if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
+})
+// deleting old unnecessary runs from client.runs
    runsdata.forEach(run => client.runs.set(run.id,run))
    //adding runs to client.runs collection
    
@@ -91,11 +95,13 @@ setInterval(async () => {
     })
   }
    client.runs.forEach(run=> er.set(run.id,run));
+   //setting new runs to existing to not get detected as new next time
    er.forEach(x => {
      if(!client.runs.has(x.id)) er.delete(x.id)
    })
-
+// deleting unnecessary old runs
 },60000);
+// using setInterval to repeat the process every minute
 
   }
 }
