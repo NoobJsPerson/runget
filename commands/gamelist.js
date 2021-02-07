@@ -12,9 +12,8 @@ module.exports = {
      
      if(`•${array.join('\n•')}`.length <= 2048)return total.push(array);
      const secondarray = [];
-     array.forEach(() => {
-   if(`•${array.join('\n•')}`.length > 2048) secondarray.push(array.shift());
-     });
+   while(`•${array.join('\n•')}`.length > 2048) secondarray.push(array.shift());
+     
      if('•'+secondarray.join('\n•').length <= 2048){
        total.push(secondarray);
      } else {
