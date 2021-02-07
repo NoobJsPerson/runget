@@ -7,7 +7,8 @@ module.exports = {
     console.log('bot ready')
     client.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
     const er = new Collection();
-       
+    
+    
 
         
     
@@ -15,12 +16,16 @@ setInterval(async () => {
   
   
     const runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc');
+
     const runsjson = await runs.json();
+    
     const runsdata = runsjson.data;
+    //fetching newly verified runs
    runsdata.forEach(run => client.runs.set(run.id,run))
+   //adding runs to client.runs collection
    
   const newruns = client.runs.filter(x => !er.has(x.id));
-
+ //filter the runs that existing runs collection doesn't have
   if(newruns.first()){
     newruns.forEach(async newrun =>{
     let level='';
@@ -29,25 +34,28 @@ setInterval(async () => {
    const userres = await fetch(`https://speedrun.com/api/v1/users/${newrun.players[0].id}`)
    const userjson = await userres.json()
    const user = await userjson.data.names.international
-     
+     // fetching user data
    const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`)
    const gamejson = await gameres.json()
    const game = gamejson.data.names.international
-
+ //fetching game data
    const cover = gamejson.data.assets['cover-large'].uri
    const categoryres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}`)
    const categoryjson = await categoryres.json()
    const category = categoryjson.data.name
+   // fetching category data
    if(newrun.level){
         const lvlres = await fetch(`https://speedrun.com/api/v1/levels/${newrun.level}`);
         const lvljson = await lvlres.json();
         level = lvljson.data.name
         lvlid = lvljson.data.id
+        //fetching level data if found
    }
      const leaderres = await fetch(`https://speedrun.com/api/v1/leaderboards/${gamejson.data.id}/${level?`level/${lvlid}`:'category'}/${categoryjson.data.id}`);
      const leaderjson = await leaderres.json();
      const topobj = leaderjson.data.runs.find(rundata => rundata.run.id == newrun.id);
      if(topobj) top = topobj.place;
+     // fetching place in leaderboards (might fail if category has variables)
      
    
     const embed = new MessageEmbed()
@@ -58,7 +66,7 @@ setInterval(async () => {
     .addField('Verified at:','`'+newrun.status['verify-date'].replace('T',' ').replace('Z','')+'`')
     .setThumbnail(cover);
     if(top) embed.addField('Place in leaderboards',top);
-
+ // constructing the run embed
     client.guilds.cache.forEach(g => {
       const channel = g.channels.cache.find(c => c.name =='new-runs')
       
@@ -76,6 +84,7 @@ setInterval(async () => {
           
           }
         }
+        // sending the embed
       }
     });
       
