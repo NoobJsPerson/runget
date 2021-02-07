@@ -21,12 +21,13 @@ setInterval(async () => {
     
     const runsdata = runsjson.data;
     //fetching newly verified runs
+runsdata.forEach(run => client.runs.set(run.id,run))
+   //adding runs to client.runs collection
  client.runs.forEach(x => {
 if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
 })
 // deleting old unnecessary runs from client.runs
-   runsdata.forEach(run => client.runs.set(run.id,run))
-   //adding runs to client.runs collection
+   
    
   const newruns = client.runs.filter(x => !er.has(x.id));
  //filter the runs that existing runs collection doesn't have
