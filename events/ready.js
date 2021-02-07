@@ -24,7 +24,6 @@ setInterval(async () => {
   const newruns = client.runs.filter(x => !er.has(x.id));
 
   if(newruns.first()){
-    console.log(newruns.first())
     newruns.forEach(async newrun =>{
     let level='';
     let lvlid;
@@ -76,7 +75,7 @@ setInterval(async () => {
           if(dbgame.includes(gamejson.data.id)){
 
             channel.send(embed)
-          console.log('ye boi')
+          
           }
         }
       }
