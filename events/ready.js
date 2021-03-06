@@ -1,5 +1,5 @@
 const {Collection,MessageEmbed} = require ('discord.js');
-const db = require ('quick.db');
+const fs = require ('fs');
 const fetch = require('node-fetch');
 module.exports = {
   name:'ready',
