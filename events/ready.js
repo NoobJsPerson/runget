@@ -88,7 +88,7 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
     .setThumbnail(cover);
     if(top) embed.addField('Place in leaderboards',top);
  // constructing the run embed
-    client.guilds.cache.forEach(g => {
+    client.guilds.cache.forEach(async g => {
       const channel = g.channels.cache.find(c => c.name =='new-runs')
       const content = await fs.promises.readFile('./storage.json');
 const storageObject = JSON.parse(content);
