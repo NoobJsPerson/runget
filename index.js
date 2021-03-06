@@ -14,14 +14,11 @@ const client = new Discord.Client({ws:{properties: {$browser: 'Discord Android'}
 client.cooldowns = new Discord.Collection();
 
 
-client.spaceCommands = new Discord.Collection();
-
 client.events = new Discord.Collection();
 
 
 client.commands = new Discord.Collection();
 
-client.snipes = new Discord.Collection();
 
 client.editsnipes = new Discord.Collection();
 fs.readdir('./events/', (err, files) => { // We use the method readdir to read what is in the events folder
@@ -67,7 +64,7 @@ client.events.set(eventFunction.event,eventFunction);
     });
 }
  walk(`./commands/`,client.commands);
- walk(`./spaceCommands`,client.spaceCommands);
+ 
 
 
 
