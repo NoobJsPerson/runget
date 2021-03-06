@@ -23,21 +23,16 @@ module.exports = {
       json = ajson;
     }
         } 
-        
-   const list = db.get(`${message.guild.id}.game`);
-   const nameslist = db.get(`${message.guild.id}.gamenames`);
+        const content = await fs.promises.readFile('./storage.json');
+const storageObject = JSON.parse(content);
+const list = storageObject[message.guild.id]
+
     if(!list) return message.reply('i can\'t delete a game from a list thats empty');
     if(!list.includes(json.data.id)) return message.reply('i can\'t delete a game thats not in the list')
-    list.forEach((x,index)=>{
-      if(x == json.data.id){
-        list.splice(index,1);
-        console.log(json.data.id)
-        nameslist.splice(index,1);
-        console.log(index)
-      }
-    })
-      db.set(`${message.guild.id}.game`,list);
-      db.set(`${message.guild.id}.gamenames`,nameslist);
+    storageObject[message.guild.id] = list.filter(x => x.id != json.data.id)
+      
+await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
+
     
     
     message.channel.send(`the game ${json.data.names.international} got successfully deleted`);
