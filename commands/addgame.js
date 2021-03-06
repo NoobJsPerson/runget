@@ -1,4 +1,4 @@
-const db = require('quick.db');
+const fs = require ('fs');
 const fetch = require('node-fetch');
 module.exports = {
   name:'addgame',
@@ -26,10 +26,19 @@ module.exports = {
      if(!json.data.id) return message.reply('please input a valid name, website name or id ||if the name has spaces put it in ""||');
     }
         } 
-        if(db.get(`${message.guild.id}.game`) && db.get(`${message.guild.id}.game`).includes(json.data.id)) return message.reply('i can\'t add a game thats already in the list')
+        const content = await fs.promises.readFile('./storage.json');
+const storageObject = JSON.parse(content);
+const obj = { id : json.data.id, name : json.data.names.international };
+const serverObject = storageObject[message.guild.id];
 
-    db.push(`${message.guild.id}.game`,json.data.id);
-    db.push(`${message.guild.id}.gamenames`,json.data.names.international);
+        if(serverObject && serverObject.includes(obj)) return message.reply('i can\'t add a game thats already in the list')
+
+    if (storageObject[message.guild.id] instanceof Array) {
+  storageObject[message.guild.id].push(obj);
+} else {
+  storageObject[message.guild.id] = [ obj ];
+}
+await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
     message.channel.send(`the game ${json.data.names.international} has been successfully added to the runlist`);
   }
 };
