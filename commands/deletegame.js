@@ -28,7 +28,7 @@ const storageObject = JSON.parse(content);
 const list = storageObject[message.guild.id]
 
     if(!list) return message.reply('i can\'t delete a game from a list thats empty');
-    if(!list.includes(json.data.id)) return message.reply('i can\'t delete a game thats not in the list')
+    if(!list.find(x => x.id == json.data.id)) return message.reply('i can\'t delete a game thats not in the list')
     storageObject[message.guild.id] = list.filter(x => x.id != json.data.id)
       
 await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
