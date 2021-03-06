@@ -1,5 +1,4 @@
-
-const db = require('quick.db');
+const fs = require ('fs');
 const fetch = require ('node-fetch');
 const sortArray = require('sort-array');
 module.exports = {
@@ -22,11 +21,13 @@ module.exports = {
      total.push(array);
 
    }
-    const list = db.get(`${message.guild.id}.gamenames`);
+    const content = await fs.promises.readFile('./storage.json');
+const storageObject = JSON.parse(content);
+const list = storageObject[message.guild.id]
     
  
     if(!list||!list.length) return message.reply('the gamelist is currently empty add games to it using .addgame');
-    const sorted = sortArray(list);
+    const sorted = sortArray(list.map(x => x.name));
     
     underify(sorted);
     console.log(total)
