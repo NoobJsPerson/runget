@@ -49,10 +49,10 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
    const categoryjson = await categoryres.json()
    const category = categoryjson.data.name
    // fetching category data
-   const variablesres = await fetch(categoryjson.data.links.find(x => x.rel == 'variables').url);
+   const variablesres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}/variables`);
    const variablesjson = await variablesres.json();
    console.log(categoryjson)
-   const category = categoryjson.data.name
+   
    const runVariables = Object.entries(newrun.values);
 		    let subcategoryName = '',subcategoryQuery = '';
 		    runVariables.forEach(v => {
