@@ -90,8 +90,12 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
  // constructing the run embed
     client.guilds.cache.forEach(g => {
       const channel = g.channels.cache.find(c => c.name =='new-runs')
+      const content = await fs.promises.readFile('./storage.json');
+const storageObject = JSON.parse(content);
+
+
       
-      const dbgame = db.get(`${g.id}.game`)
+      const dbgame = storageObject[g.id]
       
       if(channel){
         if(!dbgame ||!dbgame.length){
@@ -99,7 +103,7 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
           channel.send(embed)
         } else {
                 
-          if(dbgame.includes(gamejson.data.id)){
+          if(dbgame.find(x => x.id == newrun.game)){
 
             channel.send(embed)
           
