@@ -1,6 +1,6 @@
 const fs = require ('fs');
 module.exports = {
-	run(guild){
+	async run(guild){
 	const content = await fs.promises.readFile('./storage.json');
 const storageObject = JSON.parse(content);
 
