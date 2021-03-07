@@ -20,4 +20,8 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 * when using .addgames command you should pass the same arguments as .addgame but you won't need to use "" if the game name has spaces, also don't add unnecessary spaces. Ex:
 ✖️ .addgames mcbe | mcbece
 ✔️ .addgames mcbe|mcbece
-* adding games stops when an argument is invalid (planned to get fixed soon)
+* adding games stops when an argument is invalid while using .addgames command (planned to get fixed soon)
+## TODO List
+- Making bot usable in dms
+- adding .deletegames command (will work similarly to .addgames)
+- fix the issue when the bot stops adding games when an argument is invalid while using .addgames commands
