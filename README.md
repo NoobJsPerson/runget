@@ -13,3 +13,5 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 - .deletegame: deletes mentioned game from gamelist
 - .gamelist: sends the current server's gamelist in embed(s)
 - .help: sends a list of commands with their usage
+- .invite: sends the bot's invite
+- .source: sends the link to this repository
