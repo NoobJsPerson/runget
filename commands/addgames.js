@@ -6,12 +6,13 @@ module.exports = {
   usage:'<website-name|id>',
   description:'adds the games you want to see their runs to the gamelist',
   async execute(message,args){
-    if(! message.author.id=='692388855201923163'&&!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
+    if(message.guild&&!message.author.id=='692388855201923163'&&!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
     const argz = args.join(' ').split('|');
     argz = argz.map(x => x.replace(' ','%20'))
     const content = await fs.promises.readFile('./storage.json');
 const storageObject = JSON.parse(content);
-const serverObject = storageObject[message.guild.id];
+const objtype = message.guild?message.guild.id:message.author.id
+const serverObject = storageObject[objtype];
 
     for(const x of argz){
     const errormsg = `are you sure https://www.speedrun.com/${x} exists
@@ -37,10 +38,10 @@ const serverObject = storageObject[message.guild.id];
 
         if(serverObject && serverObject.find(x => x.id == json.data.id)) return message.reply('i can\'t add a game thats already in the list')
 
-    if (storageObject[message.guild.id] instanceof Array) {
-  storageObject[message.guild.id].push(obj);
+    if (storageObject[objtype] instanceof Array) {
+  storageObject[objtype].push(obj);
 } else {
-  storageObject[message.guild.id] = [ obj ];
+  storageObject[objtype] = [ obj ];
 }
     message.channel.send(`the game ${json.data.names.international} has been successfully added to the runlist`);
     
