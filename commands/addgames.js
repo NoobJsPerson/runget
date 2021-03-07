@@ -35,7 +35,7 @@ const serverObject = storageObject[message.guild.id];
         } 
         const obj = { id : json.data.id, name : json.data.names.international };
 
-        if(serverObject && serverObject.includes(obj)) return message.reply('i can\'t add a game thats already in the list')
+        if(serverObject && serverObject.find(x => x.id == json.data.id)) return message.reply('i can\'t add a game thats already in the list')
 
     if (storageObject[message.guild.id] instanceof Array) {
   storageObject[message.guild.id].push(obj);
