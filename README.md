@@ -21,7 +21,8 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 ✖️ .addgames mcbe | mcbece
 ✔️ .addgames mcbe|mcbece
 * adding games stops when an argument is invalid while using .addgames command (planned to get fixed soon)
+* when hosting the bot from source code go to the .env file and replace **yourtokenhere** by your bot's token
 ## TODO List
-- Making bot usable in dms
+- ~~Making bot usable in dms~~ ✔️ done
 - adding .deletegames command (will work similarly to .addgames)
 - fix the issue when the bot stops adding games when an argument is invalid while using .addgames commands
