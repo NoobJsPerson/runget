@@ -23,13 +23,14 @@ module.exports = {
       json = ajson;
     }
         } 
-        const content = await fs.promises.readFile('./storage.json');
+const objtype = message.guild?message.guild.id:message.author.id;
+const content = await fs.promises.readFile('./storage.json');
 const storageObject = JSON.parse(content);
-const list = storageObject[message.guild.id]
+const list = storageObject[message.guild.i]
 
     if(!list) return message.reply('i can\'t delete a game from a list thats empty');
     if(!list.find(x => x.id == json.data.id)) return message.reply('i can\'t delete a game thats not in the list')
-    storageObject[message.guild.id] = list.filter(x => x.id != json.data.id)
+    storageObject[objtype] = list.filter(x => x.id != json.data.id)
       
 await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
 
