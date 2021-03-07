@@ -15,3 +15,9 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 - .help: sends a list of commands with their usage
 - .invite: sends the bot's invite
 - .source: sends the link to this repository
+## Notes
+* when using .addgame command you should pass the id, the abbreviation or game name (case sensitive, put it in "" if it has spaces)
+* when using .addgames command you should pass the same arguments as .addgame but you won't need to use "" if the game name has spaces, also don't add unnecessary spaces. Ex:
+✖️ .addgames mcbe | mcbece
+✔️ .addgames mcbe|mcbece
+* adding games stops when an argument is invalid (planned to get fixed soon)
