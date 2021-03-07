@@ -6,7 +6,7 @@ module.exports = {
   usage:'<website-name|id>',
   description:'adds the games you want to see their runs to the gamelist',
   async execute(message,args){
-    if(message.guild&&!message.author.id=='692388855201923163'&&!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
+    if(message.guild&&!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
     const argz = args.join(' ').split('|');
     argz = argz.map(x => x.replace(' ','%20'))
     const content = await fs.promises.readFile('./storage.json');
