@@ -6,6 +6,7 @@ module.exports = {
   description:'displays the list of games that its runs will be sent',
   async execute(message){
     let total = [];
+    const objtype = message.guild?message.guild.id:message.author.id;
     
    function underify(array) {
      
@@ -23,17 +24,16 @@ module.exports = {
    }
     const content = await fs.promises.readFile('./storage.json');
 const storageObject = JSON.parse(content);
-const list = storageObject[message.guild.id]
+const list = storageObject[objtype];
     
  
     if(!list||!list.length) return message.reply('the gamelist is currently empty add games to it using .addgame');
     const sorted = sortArray(list.map(x => x.name));
     
     underify(sorted);
-    console.log(total)
     
     total.forEach(x=>{
-    message.channel.send({embed:{title:`${message.guild.name}'s gamelist`,
+    message.channel.send({embed:{title:`${message.guild?message.guild.name:message.author.username}'s gamelist`,
       color:'RANDOM',
       description: '•'+x.join('\n•')
     }});
