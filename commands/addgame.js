@@ -8,7 +8,7 @@ module.exports = {
   async execute(message,args){
     if(!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
     const argz = args.join(' ').split('"');
-    if(argz[2]) args[0] = argz[0].replace(' ','%20');
+    if(argz[2]) args[0] = argz[1].replace(' ','%20');
       const res = await fetch(`https://www.speedrun.com/api/v1/games/${args[0]}`);
     let json = await res.json();
     if(!json.data){
