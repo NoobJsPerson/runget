@@ -12,8 +12,6 @@ module.exports = {
     const content = await fs.promises.readFile('./storage.json');
 const storageObject = JSON.parse(content);
 const objtype = message.guild?message.guild.id:message.author.id
-const serverObject = storageObject[objtype];
-
     for(const x of argz){
     const errormsg = `are you sure https://www.speedrun.com/${x} exists
 ||if the name has spaces put it in ""||`;
@@ -41,7 +39,8 @@ const serverObject = storageObject[objtype];
         } 
         const obj = { id : json.data.id, name : json.data.names.international };
 
-        if(serverObject && serverObject.find(x => x.id == json.data.id)){ message.reply('i can\'t add a game thats already in the list');
+        if(storageObject[objtype];
+ && storageObject[objtype].find(x => x.id == json.data.id)){ message.reply('i can\'t add a game thats already in the list');
         continue;
     }
 
