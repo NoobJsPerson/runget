@@ -24,4 +24,6 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 ## TODO List
 - ~~Making bot usable in dms~~  done
 - ~~fix the issue when the bot stops adding games when an argument is invalid while using .addgames command~~ done
-- adding .deletegames command (will work similarly to .addgames)
+- ~~~adding .deletegames command (will work similarly to .addgames)~~
+
+* if you have any suggestions feel free to make a pull request ;)
