@@ -16,18 +16,18 @@ const objtype = message.guild?message.guild.id:message.author.id
     for(const x of argz){
     const errormsg = `are you sure https://www.speedrun.com/${x} exists
 ||if it didn't work try deleting unnecessary spaces||`;
-      const res = await fetch(`https://www.speedrun.com/api/v1/games/${args[0]}`);
+      const res = await fetch(`https://www.speedrun.com/api/v1/games/${x}`);
      let json = await res.json();
     if(!json.data){
           
-      const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${args[0]}`);
+      const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${x}`);
     let ajson = await ares.json();
     if(!ajson.data){
 message.reply(errormsg)
 continue;
 }
     if(ajson.data[0]){
-      json.data = ajson.data.find(x => x.names.international == argz[1])
+      json.data = ajson.data.find(y => y.names.international == x.replace('%20',' '));
       if(!json.data){
 message.reply(errormsg);
 continue;
@@ -36,18 +36,20 @@ continue;
       json = ajson;
     }
         } 
-const list = storageObject[objtype]
+const list = storageObject[objtype];
 
     if(!list){
 message.reply('i can\'t delete a game from a list thats empty');
 continue;
 }
-    if(!list.find(x => x.id == json.data.id)){
-message.reply('i can\'t delete a game thats not in the list')
+    if(!list.find(y => y.id == json.data.id)){
+message.reply('i can\'t delete a game thats not in the list');
 continue;
 }
-    storageObject[objtype] = list.filter(x => x.id != json.data.id)
-    };
+    storageObject[objtype] = list.filter(y => y.id != json.data.id)
+   
+ message.channel.send(`the game ${json.data.names.international} got successfully deleted`);
+    }
     await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
 
    }
