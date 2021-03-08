@@ -20,7 +20,6 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 * when using .addgames command you should pass the same arguments as .addgame but you won't need to use "" if the game name has spaces, also don't add unnecessary spaces. Ex:
 ✖️ .addgames mcbe | mcbece
 ✔️ .addgames mcbe|mcbece
-* adding games stops when an argument is invalid while using .addgames command (planned to get fixed soon)
 * when hosting the bot from source code go to the .env file and replace **yourtokenhere** by your bot's token
 ## TODO List
 - ~~Making bot usable in dms~~  done
