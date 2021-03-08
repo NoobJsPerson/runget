@@ -23,20 +23,27 @@ const serverObject = storageObject[objtype];
           
       const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${x}`);
     let ajson = await ares.json();
-    if(!ajson.data) return message.reply(errormsg);
+    if(!ajson.data){
+      message.reply(eerrormsg);
+      continue;
+    }
     if(ajson.data[0]){
       json.data = ajson.data.find(y => y.names.international == x.replace('%20',' '))
-      if(!json.data) return message.reply(errormsg);
+      if(!json.data){message.reply(errormsg);
+      continue;
+      }
     } else {
       json = ajson;
-      console.log(json.data);
-
-     if(!json.data.id) return message.reply(errormsg);
+     if(!json.data.id){message.reply(errormsg);
+     continue;
+     }
     }
         } 
         const obj = { id : json.data.id, name : json.data.names.international };
 
-        if(serverObject && serverObject.find(x => x.id == json.data.id)) return message.reply('i can\'t add a game thats already in the list')
+        if(serverObject && serverObject.find(x => x.id == json.data.id)){ message.reply('i can\'t add a game thats already in the list');
+        continue;
+    }
 
     if (storageObject[objtype] instanceof Array) {
   storageObject[objtype].push(obj);
