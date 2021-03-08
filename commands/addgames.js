@@ -39,7 +39,7 @@ const objtype = message.guild?message.guild.id:message.author.id
         } 
         const obj = { id : json.data.id, name : json.data.names.international };
 
-        if(storageObject[objtype];
+        if(storageObject[objtype]
  && storageObject[objtype].find(x => x.id == json.data.id)){ message.reply('i can\'t add a game thats already in the list');
         continue;
     }
@@ -51,7 +51,7 @@ const objtype = message.guild?message.guild.id:message.author.id
 }
     message.channel.send(`the game ${json.data.names.international} has been successfully added to the runlist`);
     
-    };
+    }
     await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
 
    }
