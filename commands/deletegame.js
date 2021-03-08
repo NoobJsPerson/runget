@@ -6,7 +6,7 @@ module.exports = {
   usage:'<website-name|id>',
   description:'delete the game you don\'t want to see its runs from the gamelist',
   async execute(message,args){
-    if(!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
+    if(message.guild&&!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
         const argz = args.join(' ').split('"');
     if(argz[2]) args[0] = argz[0].replace(' ','%20');
       const res = await fetch(`https://www.speedrun.com/api/v1/games/${args[0]}`);
@@ -26,7 +26,7 @@ module.exports = {
 const objtype = message.guild?message.guild.id:message.author.id;
 const content = await fs.promises.readFile('./storage.json');
 const storageObject = JSON.parse(content);
-const list = storageObject[message.guild.id]
+const list = storageObject[objtype]
 
     if(!list) return message.reply('i can\'t delete a game from a list thats empty');
     if(!list.find(x => x.id == json.data.id)) return message.reply('i can\'t delete a game thats not in the list')
