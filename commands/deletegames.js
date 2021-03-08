@@ -1,14 +1,14 @@
 const fs = require ('fs');
 const fetch = require('node-fetch');
 module.exports = {
-  name:'addgames',
+  name:'deletegames',
   aliases:['ags'],
   usage:'<website-name|id>',
-  description:'adds the games you want to see their runs to the gamelist',
+  description:'deletes the games you don\'t want to see their runs to the gamelist',
   async execute(message,args){
     if(message.guild&&!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
     let argz = args.join(' ').split('|');
-    argz = argz.map(x => x.replace(' ','%20'))
+    argz = argz.map(x => x.replace(' ','%20'));
     const content = await fs.promises.readFile('./storage.json');
 const storageObject = JSON.parse(content);
 const objtype = message.guild?message.guild.id:message.author.id
