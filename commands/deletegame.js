@@ -26,7 +26,7 @@ module.exports = {
 const objtype = message.guild?message.guild.id:message.author.id;
 const content = await fs.promises.readFile('./storage.json');
 const storageObject = JSON.parse(content);
-const list = storageObject[message.guild.i]
+const list = storageObject[message.guild.id]
 
     if(!list) return message.reply('i can\'t delete a game from a list thats empty');
     if(!list.find(x => x.id == json.data.id)) return message.reply('i can\'t delete a game thats not in the list')
