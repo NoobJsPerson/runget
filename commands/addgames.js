@@ -13,8 +13,8 @@ module.exports = {
 const storageObject = JSON.parse(content);
 const objtype = message.guild?message.guild.id:message.author.id
     for(const x of argz){
-    const errormsg = `are you sure https://www.speedrun.com/${x} exists
-||if the name has spaces put it in ""||`;
+ const errormsg = `are you sure https://www.speedrun.com/${x} exists
+||if it didn't work try deleting unnecessary spaces||`;
       const res = await fetch(`https://www.speedrun.com/api/v1/games/${x}`);
     let json = await res.json();
     if(!json.data){
