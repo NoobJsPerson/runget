@@ -38,7 +38,8 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
   if(newruns.first()){
     newruns.forEach(async newrun =>{
     let level='', lvlid, top, game, cover;
-    const guildid = Object.entries(storageObject).find(x => storageObject[x].find(y => y.id == gamejson.data.id))
+    
+    const guildid = Object.entries(storageObject).map(x => x[0]).find(x => storageObject[x].find(y => y.id == gamejson.data.id));
 const index = storageObject[guildid].findIndex(x => x.id == gamejson.data.id)
     cache = storageObject[guildid][index]
     if(cache && cache.url){
