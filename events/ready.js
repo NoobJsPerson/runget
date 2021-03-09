@@ -9,10 +9,14 @@ module.exports = {
     const er = new Collection();
     
     
-
         
     
 setInterval(async () => {
+	const content = await fs.promises.readFile('./storage.json');
+const storageObject = JSON.parse(content);
+
+
+
   
   
     const runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc');
@@ -33,18 +37,24 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
  //filter the runs that existing runs collection doesn't have
   if(newruns.first()){
     newruns.forEach(async newrun =>{
-    let level='';
-    let lvlid;
-    let top;
+    let level='', lvlid, top, game, cover;
+    cache = storageObject.find(x => x.find(y => y.id == newrun.game))
+    if(cache && cache.url){
+game = cache.name
+cover = cache.url
+} else {
+	const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`)
+   const gamejson = await gameres.json()
+  if(!game) game = gamejson.data.names.international
+ //fetching game data
+   cover = gamejson.data.assets['cover-large'].uri
+}
+    
    const userres = await fetch(`https://speedrun.com/api/v1/users/${newrun.players[0].id}`)
    const userjson = await userres.json()
    const user = await userjson.data.names.international
      // fetching user data
-   const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`)
-   const gamejson = await gameres.json()
-   const game = gamejson.data.names.international
- //fetching game data
-   const cover = gamejson.data.assets['cover-large'].uri
+   
    const categoryres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}`)
    const categoryjson = await categoryres.json()
    const category = categoryjson.data.name
@@ -72,7 +82,7 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
         lvlid = lvljson.data.id
         //fetching level data if found
    }
-     const leaderres = await fetch(`https://speedrun.com/api/v1/leaderboards/${gamejson.data.id}/${level?`level/${lvlid}`:'category'}/${categoryjson.data.id}${subcategoryQuery}`);
+     const leaderres = await fetch(`https://speedrun.com/api/v1/leaderboards/${newrun.game}/${level?`level/${lvlid}`:'category'}/${categoryjson.data.id}${subcategoryQuery}`);
      const leaderjson = await leaderres.json();
      const topobj = leaderjson.data.runs.find(rundata => rundata.run.id == newrun.id);
      if(topobj) top = topobj.place;
@@ -90,9 +100,6 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
  // constructing the run embed
     client.guilds.cache.forEach(async g => {
       const channel = g.channels.cache.find(c => c.name =='new-runs')
-      const content = await fs.promises.readFile('./storage.json');
-const storageObject = JSON.parse(content);
-
 
       
       const dbgame = storageObject[g.id]
