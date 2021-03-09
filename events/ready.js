@@ -48,6 +48,11 @@ cover = cache.url
   if(!game) game = gamejson.data.names.international
  //fetching game data
    cover = gamejson.data.assets['cover-large'].uri
+const guildid = Object.entries(storageObject).find(x => storageObject[x].find(y => y.id == gamejson.data.id))
+const index = storageObject[guildid].findIndex(x => x.id == gamejson.data.id)
+storageObject[guildid][index].url = cover
+await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
+
 }
     
    const userres = await fetch(`https://speedrun.com/api/v1/users/${newrun.players[0].id}`)
