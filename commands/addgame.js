@@ -32,7 +32,7 @@ module.exports = {
 const storageObject = JSON.parse(content);
 let objtype = message.guild?message.guild.id:message.author.id;
 
-const obj = { id : json.data.id, name : json.data.names.international};
+const obj = { id : json.data.id, name : json.data.names.international, url:json.data.assets['cover-large'].uri};
 const serverObject = storageObject[objtype];
 
         if(serverObject && serverObject.find(x => x.id == json.data.id)) return message.reply('i can\'t add a game thats already in the list');
