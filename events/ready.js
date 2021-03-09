@@ -38,7 +38,9 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
   if(newruns.first()){
     newruns.forEach(async newrun =>{
     let level='', lvlid, top, game, cover;
-    cache = storageObject.find(x => x.find(y => y.id == newrun.game))
+    const guildid = Object.entries(storageObject).find(x => storageObject[x].find(y => y.id == gamejson.data.id))
+const index = storageObject[guildid].findIndex(x => x.id == gamejson.data.id)
+    cache = storageObject[guildid][index]
     if(cache && cache.url){
 game = cache.name
 cover = cache.url
@@ -48,10 +50,10 @@ cover = cache.url
   if(!game) game = gamejson.data.names.international
  //fetching game data
    cover = gamejson.data.assets['cover-large'].uri
-const guildid = Object.entries(storageObject).find(x => storageObject[x].find(y => y.id == gamejson.data.id))
-const index = storageObject[guildid].findIndex(x => x.id == gamejson.data.id)
+if(cache){
 storageObject[guildid][index].url = cover
 await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
+}
 
 }
     
