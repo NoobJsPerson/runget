@@ -37,20 +37,21 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
  //filter the runs that existing runs collection doesn't have
   if(newruns.first()){
     newruns.forEach(async newrun =>{
-    let level='', lvlid, top, game, cover;
+    let level='', lvlid, top, game, cover, index, cache;
     
-    const guildid = Object.entries(storageObject).map(x => x[0]).find(x => storageObject[x].find(y => y.id == gamejson.data.id));
-const index = storageObject[guildid].findIndex(x => x.id == gamejson.data.id)
-    cache = storageObject[guildid][index]
+    const guildid = Object.entries(storageObject).map(x => x[0]).find(x => storageObject[x].find(y => y.id == newrun.game));
+    
+if(storageObject[guildid]) index = storageObject[guildid].findIndex(x => x.id == newrun.game);
+   if(guildid && index) cache = storageObject[guildid][index];
     if(cache && cache.url){
-game = cache.name
-cover = cache.url
+game = cache.name;
+cover = cache.url;
 } else {
 	const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`)
    const gamejson = await gameres.json()
   if(!game) game = gamejson.data.names.international
  //fetching game data
-   cover = gamejson.data.assets['cover-large'].uri
+   cover = gamejson.data.assets['cover-large'].uri;
 if(cache){
 storageObject[guildid][index].url = cover
 await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
@@ -69,7 +70,6 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
    // fetching category data
    const variablesres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}/variables`);
    const variablesjson = await variablesres.json();
-   console.log(categoryjson)
    
    const runVariables = Object.entries(newrun.values);
 		    let subcategoryName = '',subcategoryQuery = '';
