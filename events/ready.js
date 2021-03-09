@@ -37,7 +37,7 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
  //filter the runs that existing runs collection doesn't have
   if(newruns.first()){
     newruns.forEach(async newrun =>{
-    let level='', lvlid, top, game, cover, index, cache;
+    let level='', lvlid, top='N/A', game, cover, index, cache;
     
     const guildid = Object.entries(storageObject).map(x => x[0]).find(x => storageObject[x].find(y => y.id == newrun.game));
     
@@ -103,8 +103,8 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
     .setDescription(`**${newrun.times.primary.replace('PT','').replace('H',' hours ').replace('M',' minutes ').replace('S',' seconds')} by ${user}**`)
     .setURL(newrun.weblink)
     .addField('Verified at:','`'+newrun.status['verify-date'].replace('T',' ').replace('Z','')+'`')
-    .setThumbnail(cover);
-    if(top) embed.addField('Place in leaderboards',top);
+    .setThumbnail(cover)
+    .addField('Place in leaderboards',top);
  // constructing the run embed
     client.guilds.cache.forEach(async g => {
       const channel = g.channels.cache.find(c => c.name =='new-runs')
