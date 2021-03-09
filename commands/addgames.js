@@ -40,7 +40,7 @@ const objtype = message.guild?message.guild.id:message.author.id
         const obj = { id : json.data.id, name : json.data.names.international };
 
         if(storageObject[objtype]
- && storageObject[objtype].find(x => x.id == json.data.id)){ message.reply('i can\'t add a game thats already in the list');
+ && storageObject[objtype].find(y => y.id == json.data.id)){ message.reply('i can\'t add a game thats already in the list');
         continue;
     }
 
