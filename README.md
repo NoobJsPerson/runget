@@ -1,5 +1,5 @@
 ## RunGet Bot
-RunGet is a discord bot with the prefix **.** that posts recent verified runs from Speedrun.com
+RunGet is a discord bot  with the prefix **.** that posts recent verified runs from Speedrun.com 
 You can invite the official hosted version from [here](https://discord.com/api/oauth2/authorize?client_id=754827405813743676&permissions=52224&scope=bot)
 ![Screenshot of the embed](screenshots/Screenshot_20210307-135020-1.jpg)
 ## How to setup verified runs
@@ -21,9 +21,8 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 ✖️ .addgames mcbe | mcbece
 ✔️ .addgames mcbe|mcbece
 * when hosting the bot from source code go to the .env file and replace **yourtokenhere** by your bot's token
-## TODO List
-- ~~Making bot usable in dms~~  done
-- ~~fix the issue when the bot stops adding games when an argument is invalid while using .addgames command~~ done
-- ~~adding .deletegames command (will work similarly to.addgames)~~ done
+## Features
+- You can use the bot in dms
+- caches game name and cover for less requests (Special thanks to daanolav#6416 for the idea)
 
 If you have any suggestions feel free to make a pull request ;)
