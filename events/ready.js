@@ -37,9 +37,10 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
  //filter the runs that existing runs collection doesn't have
   if(newruns.first()){
     newruns.forEach(async newrun =>{
-    let level='', lvlid, top='N/A', game, cover, index, cache;
+    let level='', lvlid, top='N/A', game, cover, index, cache, guildid;
     
-    const guildid = Object.entries(storageObject).map(x => x[0]).find(x => storageObject[x].find(y => y.id == newrun.game));
+    const guildarr = Object.entries(storageObject).find(x => x[1].find(y => y.id == newrun.game));
+    if(guildarr) guildid = guildarr[0]
     
 if(storageObject[guildid]) index = storageObject[guildid].findIndex(x => x.id == newrun.game);
    if(guildid && index) cache = storageObject[guildid][index];
