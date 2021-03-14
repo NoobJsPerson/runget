@@ -11,6 +11,7 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 - .addgame: adds the mentioned game into the gamelist
 - .addgames: same as .addgame but it can add multiple games when they're seperated by |
 - .deletegame: deletes mentioned game from gamelist
+- .deletegames: same as .deletegame but it can delete multiple games when they're seperated by |
 - .gamelist: sends the current server's gamelist in embed(s)
 - .help: sends a list of commands with their usage
 - .invite: sends the bot's invite
