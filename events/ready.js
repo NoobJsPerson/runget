@@ -44,13 +44,13 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
     
 if(storageObject[guildid]) index = storageObject[guildid].findIndex(x => x.id == newrun.game);
    if(guildid && index) cache = storageObject[guildid][index];
-    if(cache && cache.url){
+    if(cache){
 game = cache.name;
 cover = cache.url;
 } else {
 	const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`)
    const gamejson = await gameres.json()
-  if(!game) game = gamejson.data.names.international
+  game = gamejson.data.names.international
  //fetching game data
    cover = gamejson.data.assets['cover-large'].uri;
 if(cache){
