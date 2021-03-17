@@ -23,7 +23,7 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 ✔️ .addgames mcbe|mcbece
 * when hosting the bot from source code go to the .env file and replace **yourtokenhere** by your bot's token
 ## Credits
-Special thanks to
+Special thanks to:
 - dad infinitum#6805 the owner of the repository this bot is built on, check it out [here](https://github.com/slashinfty/run-get)
 - daanolav#6416 for the idea of caching game name and cover for less requests 
 
