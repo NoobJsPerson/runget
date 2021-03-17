@@ -22,8 +22,9 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 ✖️ .addgames mcbe | mcbece
 ✔️ .addgames mcbe|mcbece
 * when hosting the bot from source code go to the .env file and replace **yourtokenhere** by your bot's token
-## Features
-- You can use the bot in dms
-- caches game name and cover for less requests (Special thanks to daanolav#6416 for the idea)
+## Credits
+Special thanks to
+- dad infinitum#6805 the owner of the repository this bot is built on, check it out [here](https://github.com/slashinfty/run-get)
+- daanolav#6416 for the idea of caching game name and cover for less requests 
 
 If you have any suggestions feel free to make a pull request ;)
