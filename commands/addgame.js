@@ -8,8 +8,7 @@ module.exports = {
   async execute(message,args){
     if(message.guild&&!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
     const input = args.join('%20')
-    const errormsg = `are you sure https://www.speedrun.com/${input} exists
-||if the name has spaces put it in ""||`;
+    const errormsg = "please input a valid name, abbreviation or id";
       const res = await fetch(`https://www.speedrun.com/api/v1/games/${input}`);
     let json = await res.json();
     if(!json.data){
