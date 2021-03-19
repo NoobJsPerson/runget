@@ -17,7 +17,7 @@ module.exports = {
     let ajson = await ares.json();
     if(!ajson.data) return message.reply(errormsg);
     if(ajson.data[0]){
-      json.data = ajson.data.find(x => x.names.international == argz[1])
+      json.data = ajson.data.find(x => x.names.international == args.join(" "))
       if(!json.data) return message.reply(errormsg);
     } else {
       json = ajson;
