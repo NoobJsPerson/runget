@@ -62,7 +62,7 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
     newrun.players.forEach( async player => {
    const userres = await fetch(`https://speedrun.com/api/v1/users/${newrun.player.id}`)
    const userjson = await userres.json()
-   user += await userjson.data.names.international
+   user += ' and '+await userjson.data.names.international
    });
      // fetching user data
    
@@ -79,8 +79,8 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
 		    
 			    const foundVariable = variablesjson.data.find(c => c.id === v[0]);
 			    if (foundVariable['is-subcategory'] === true) {
-				    subcategoryName += subcategoryName === '' ? foundVariable.values.values[v[1]].label : ', ' + foundVariable.values.values[v[1]].label;
-				    subcategoryQuery += subcategoryQuery === '' ? '?var-' + v[0] + '=' + v[1] : '&var-' + v[0] + '=' + v[1];
+				    subcategoryName += !subcategoryName ? foundVariable.values.values[v[1]].label : ', ' + foundVariable.values.values[v[1]].label;
+				    subcategoryQuery += !subcategoryQuery? '?var-' + v[0] + '=' + v[1] : '&var-' + v[0] + '=' + v[1];
 			    
 		    }
 		    });
