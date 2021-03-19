@@ -37,7 +37,7 @@ if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
  //filter the runs that existing runs collection doesn't have
   if(newruns.first()){
     newruns.forEach(async newrun =>{
-    let level='', lvlid, top='N/A', game, cover, index, cache, guildid;
+    let level='', lvlid, top='N/A', game, cover, index, cache, guildid, user = '';
     
     const guildarr = Object.entries(storageObject).find(x => x[1].find(y => y.id == newrun.game));
     if(guildarr) guildid = guildarr[0]
@@ -59,10 +59,11 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
 }
 
 }
-    
-   const userres = await fetch(`https://speedrun.com/api/v1/users/${newrun.players[0].id}`)
+    newrun.players.forEach( async player => {
+   const userres = await fetch(`https://speedrun.com/api/v1/users/${newrun.player.id}`)
    const userjson = await userres.json()
-   const user = await userjson.data.names.international
+   user += await userjson.data.names.international
+   });
      // fetching user data
    
    const categoryres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}`)
