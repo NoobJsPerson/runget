@@ -16,7 +16,7 @@ module.exports = {
     let ajson = await ares.json();
     if(!ajson.data) return message.reply('please input a valid name, abbreviation or id');
     if(ajson.data[0]){
-      json.data = ajson.data.find(x => x.names.international == argz[1])
+      json.data = ajson.data.find(x => x.names.international == args.join(" "))
       if(!json.data) return message.reply('please input a valid name, abbreviation or id');
     } else {
       json = ajson;
