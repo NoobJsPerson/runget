@@ -59,11 +59,11 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
 }
 
 }
-    newrun.players.forEach( async player => {
-   const userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`)
-   const userjson = await userres.json()
-      user += `${user?' and ':''}`+userjson.data.names.international;
-   });
+    for(let player of newrun.players){
+   const userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`);
+   const userjson = await userres.json();
+   user += `${user?' and ':''}${userjson.data.names.international}`;
+   }
      // fetching user data
    
    const categoryres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}`)
