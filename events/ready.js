@@ -60,7 +60,7 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
 
 }
     newrun.players.forEach( async player => {
-   const userres = await fetch(`https://speedrun.com/api/v1/users/${newrun.player.id}`)
+   const userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`)
    const userjson = await userres.json()
       user += `${user?' and ':''}`+userjson.data.names.international;
    });
