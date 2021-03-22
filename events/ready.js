@@ -106,11 +106,11 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
     .setColor('RANDOM')
     .setDescription(`**${newrun.times.primary.replace('PT','').replace('H',' hours ').replace('M',' minutes ').replace('S',' seconds')} by ${user}**`)
     .setURL(newrun.weblink)
-    .addField('Verified at:','`'+newrun.status['verify-date'].replace('T',' ').replace('Z','')+'`')
+    .addField('Verified at:','`'+newrun.status['verify-date'].replace('T',' ').replace('Z','')+'`', true)
     .setThumbnail(cover)
-    .addField('Place in leaderboards',top);
+    .addField('Place in leaderboards',top,true);
  // constructing the run embed
-    client.guilds.cache.forEach(async g => {
+    client.guilds.cache.forEach(g => {
       const channel = g.channels.cache.find(c => c.name =='new-runs')
 
       
