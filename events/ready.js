@@ -62,7 +62,8 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
     for(let player of newrun.players){
    const userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`);
    const userjson = await userres.json();
-      user = user?user+' and '+userjson.data.names.international:userjson.data.names.international;
+   const i = newrun.players.findIndex(x => x.id == player.id )
+      user += (user?i==newruns.players.length-1?' and ':', ':'')+userjson.data.names.international
 
    }
      // fetching user data
