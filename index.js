@@ -5,7 +5,7 @@ const express = require('express');
 const server = express();
 const path = require('path');
 server.all('/', (req, res)=>{
-    res.send("henlo");
+    res.json({working: true});
 });
 
 
@@ -64,7 +64,21 @@ client.events.set(eventFunction.event,eventFunction);
     });
 }
  walk(`./commands/`,client.commands);
- 
+ /*
+ 	setTimeout(function() {
+  https.get("https://projectname.username.repl.co", (resp) => {
+    let data = "";
+    resp.on("data", (chunk) => {
+      data += chunk;
+    });
+    resp.on('end', () => {
+      console.log("Ping the website and it responsed: " + JSON.parse(data).working);
+    });
+  }).on("error", (err) => {
+    console.log("Error: " + err.message);
+  });
+},300000);
+*/
 
 
 
