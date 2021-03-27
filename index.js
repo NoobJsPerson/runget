@@ -65,6 +65,7 @@ client.events.set(eventFunction.event,eventFunction);
 }
  walk(`./commands/`,client.commands);
  /*
+ 	const https = require('https');
  	setTimeout(function() {
   https.get("https://projectname.username.repl.co", (resp) => {
     let data = "";
