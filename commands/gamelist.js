@@ -28,7 +28,7 @@ const list = storageObject[objtype];
     
  
     if(!list||!list.length) return message.reply('the gamelist is currently empty add games to it using .addgame');
-    const sorted = sortArray(list.map(x => x.name));
+    const sorted = list.map(x => x.name).sort();
     
     underify(sorted);
     
