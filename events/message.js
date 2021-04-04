@@ -1,6 +1,6 @@
 const Discord = require ('discord.js');
 const escapeRegex = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-const duration = require('../timeshower.js');
+const duration = require('../duration.js');
 module.exports ={
   name:'message',
   run:(message,client,prefix) => {
