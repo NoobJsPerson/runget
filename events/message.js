@@ -3,7 +3,7 @@ const escapeRegex = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const duration = require('../timeshower.js');
 module.exports ={
   name:'message',
-  run:(message,client,queue,prefix) => {
+  run:(message,client,prefix) => {
  
   
 	client.spaceCommands.array().forEach(cmd => {
