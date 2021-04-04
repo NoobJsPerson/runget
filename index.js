@@ -35,35 +35,19 @@ client.events.set(eventFunction.event,eventFunction);
 
         // Try catch block to throw an error if the code in try{} doesn't work
         try {
-            emitter[once ? 'once' : 'on'](eventFunction.event, (...args) => client.events.get(eventFunction.event).run(...args,client,queue,prefix)); // Run the event using the above defined emitter (client)
+            emitter[once ? 'once' : 'on'](eventFunction.event, (...args) => client.events.get(eventFunction.event).run(...args,client,prefix)); // Run the event using the above defined emitter (client)
         } catch (error) {
             console.error(error.stack); // If there is an error, console log the error stack message
         }
     });
 });
 
- function walk(dir, collection, callback) {
-    fs.readdir(dir, function(err, files) {
-        if (err) throw err;
-        files.forEach(function(file) {
-            console.log(`Loading a total of ${files.length} commands.`);
-            var filepath = path.join(dir, file);
-            fs.stat(filepath, function(err,stats) {
-                if (stats.isDirectory()) {
-                    walk(filepath, callback);
-                } else if (stats.isFile() && file.endsWith('.js')) {
-                    let props = require(`./${filepath}`);
-                    console.log(`Loading Command: ${props.name} ✔`);
-                    collection.set(props.name, props);
-             
-                    
-                  
-                }
-            });
-        });
-    });
+ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	client.commands.set(command.name, command);
 }
- walk(`./commands/`,client.commands);
  /*
  	const https = require('https');
  	setTimeout(function() {
