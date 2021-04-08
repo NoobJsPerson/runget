@@ -29,7 +29,7 @@ runsdata.forEach(run => client.runs.set(run.id,run))
    //adding runs to client.runs collection
  client.runs.forEach(x => {
 if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
-})
+});
 // deleting old unnecessary runs from client.runs
    
    
