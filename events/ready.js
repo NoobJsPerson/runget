@@ -6,7 +6,7 @@ module.exports = {
   async run(client,prefix){
     console.log('bot ready')
     client.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
-    const er = new Collection();
+    let er = new Collection();
     
     
         
@@ -27,9 +27,7 @@ const storageObject = JSON.parse(content);
     //fetching newly verified runs
 runsdata.forEach(run => client.runs.set(run.id,run))
    //adding runs to client.runs collection
- client.runs.forEach(x => {
-if(!runsdata.find(z => x.id == z.id)) client.runs.delete(x.id)
-});
+ client.runs = client.runs.filter(x => runsdata.find(z => x.id == z.id));
 // deleting old unnecessary runs from client.runs
    
    
@@ -136,9 +134,8 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
   }
    client.runs.forEach(run=> er.set(run.id,run));
    //setting new runs to existing to not get detected as new next time
-   er.forEach(x => {
-     if(!client.runs.has(x.id)) er.delete(x.id)
-   })
+
+	er = er.filter(x => client.runs.has(x.id));
 // deleting unnecessary old runs
 },60000);
 // using setInterval to repeat the process every minute
