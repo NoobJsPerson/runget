@@ -50,7 +50,7 @@ for (const file of commandFiles) {
 }
  /*
  	const https = require('https');
- 	setTimeout(function() {
+ 	setInterval(function() {
   https.get("https://projectname.username.repl.co", (resp) => {
     let data = "";
     resp.on("data", (chunk) => {
