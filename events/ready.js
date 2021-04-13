@@ -19,7 +19,7 @@ const storageObject = JSON.parse(content);
 
   
   
-    const runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc');
+    const runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc').catch();
 
     const runsjson = await runs.json();
     
@@ -37,8 +37,8 @@ runsdata.forEach(run => client.runs.set(run.id,run))
     newruns.forEach(async newrun =>{
     let level='', lvlid, top='N/A', game, cover, index, cache, guildid, user = '';
     
-    const guildarr = Object.entries(storageObject).find(x => x[1].find(y => y.id == newrun.game));
-    if(guildarr) guildid = guildarr[0]
+    const guildid = Object.keys(storageObject).find(x => storageObject[x].id == newrun.game);
+
     
 if(storageObject[guildid]) index = storageObject[guildid].findIndex(x => x.id == newrun.game);
    if(guildid && index) cache = storageObject[guildid][index];
@@ -46,7 +46,7 @@ if(storageObject[guildid]) index = storageObject[guildid].findIndex(x => x.id ==
 game = cache.name;
 cover = cache.url;
 } else {
-	const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`)
+	const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`).catch();
    const gamejson = await gameres.json()
   game = gamejson.data.names.international
  //fetching game data
@@ -58,7 +58,7 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
 
 }
     for(let player of newrun.players){
-   const userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`);
+   const userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`).catch();
    const userjson = await userres.json();
    const i = newrun.players.findIndex(x => x.id == player.id )
       user += (user?i==newruns.players.length-1?' and ':', ':'')+userjson.data.names.international
@@ -66,11 +66,11 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
    }
      // fetching user data
    
-   const categoryres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}`)
-   const categoryjson = await categoryres.json()
-   const category = categoryjson.data.name
+   const categoryres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}`).catch();
+   const categoryjson = await categoryres.json();
+   const category = categoryjson.data.name;
    // fetching category data
-   const variablesres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}/variables`);
+   const variablesres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}/variables`).catch();
    const variablesjson = await variablesres.json();
    
    const runVariables = Object.entries(newrun.values);
