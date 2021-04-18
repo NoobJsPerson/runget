@@ -21,7 +21,7 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 * when using .addgames command you should pass the same arguments as .addgame but don't add unnecessary spaces. Ex:
 ✖️ .addgames mcbe | mcbece
 ✔️ .addgames mcbe|mcbece
-* when hosting the bot from source code go to the .env file and replace **yourtokenhere** by your bot's token
+* when hosting the bot from source code make a .env file and copy the content of .env.example file to it and replace **yourtokenhere** by your bot token and delete the .env.example file
 ## Credits
 Special thanks to:
 - dad infinitum#6805 the owner of the repository this bot is built on, check it out [here](https://github.com/slashinfty/run-get)
