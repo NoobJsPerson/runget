@@ -40,8 +40,12 @@ runsdata.forEach(run => client.runs.set(run.id,run))
     const guildid = Object.keys(storageObject).find(x => storageObject[x].id == newrun.game);
 
     
-if(storageObject[guildid]) index = storageObject[guildid].findIndex(x => x.id == newrun.game);
-   if(guildid && index) cache = storageObject[guildid][index];
+const guildobj = storageObject[guildid];
+
+if(guildid){ 
+  index = guildobj.findIndex(x => x.id == newrun.game);
+   if(index) cache = guildobj[index];
+}
     if(cache){
 game = cache.name;
 cover = cache.url;
