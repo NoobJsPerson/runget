@@ -1,6 +1,5 @@
 const fs = require ('fs');
 const fetch = require ('node-fetch');
-const sortArray = require('sort-array');
 module.exports = {
   name:'gamelist',
   description:'displays the list of games that its runs will be sent',
