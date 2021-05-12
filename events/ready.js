@@ -45,22 +45,21 @@ const guildobj = storageObject[guildid];
 if(guildid){ 
   index = guildobj.findIndex(x => x.id == newrun.game);
    if(index) cache = guildobj[index];
-}
-    if(cache){
-game = cache.name;
+   game = cache.name;
+
+   if(cache.url)
 cover = cache.url;
-} else {
-	const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`).catch();
-   const gamejson = await gameres.json()
-  game = gamejson.data.names.international
+   else {
+	const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`);
+   const gamejson = await gameres.json();
  //fetching game data
    cover = gamejson.data.assets['cover-large'].uri;
 if(cache){
-storageObject[guildid][index].url = cover
+storageObject[guildid][index].url = cover;
 await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
-}
-
-}
+  }
+     }
+  }
     for(let player of newrun.players){
    const userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`).catch();
    const userjson = await userres.json();
