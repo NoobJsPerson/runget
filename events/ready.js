@@ -41,7 +41,7 @@ runsdata.forEach(run => client.runs.set(run.id,run))
 const guildarr = Object.entries(storageObject).find(x => x[1].find(y => y.id == newrun.game));
   if(guildarr){
     guildid = guildarr[0];
-    index = guildarr[1].findIndex(x => x.id = newrun.game);
+    index = guildarr[1].findIndex(x => x.id == newrun.game);
     cache = guildarr[1][index];
     game = cache.name;
     if(cache.url)
