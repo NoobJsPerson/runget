@@ -36,18 +36,15 @@ runsdata.forEach(run => client.runs.set(run.id,run))
   if(newruns.first()){
     newruns.forEach(async newrun =>{
     let level='', lvlid, top='N/A', game, cover, index, cache, guildid, user = '';
-    
-    const guildid = Object.keys(storageObject).find(x => storageObject[x].id == newrun.game);
 
     
-const guildobj = storageObject[guildid];
-
-if(guildid){ 
-  index = guildobj.findIndex(x => x.id == newrun.game);
-   if(index) cache = guildobj[index];
-   game = cache.name;
-
-   if(cache.url)
+const guildarr = Object.entries(storageObject).find(x => x[1].find(y => y.id == newrun.game));
+  if(guildarr){
+    guildid = guildarr[0];
+    index = guildarr[1].findIndex(x => x.id = newrun.game);
+    cache = guildarr[1][index];
+    game = cache.name;
+    if(cache.url)
 cover = cache.url;
    else {
 	const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`);
