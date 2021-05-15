@@ -108,17 +108,20 @@ await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
     .setThumbnail(cover)
     .addField('Place in leaderboards',top,true);
  // constructing the run embed
-    client.guilds.cache.forEach(g => {
+        client.guilds.cache.forEach(g => {
       const dbgame = storageObject[g.id];
-      
-      const channel = g.channels.cache.find(c => c.name =='new-runs' || dbgame && dbgame[0] && dbgame[0].channel == c.id);
-      
-      if(channel){
-        if(!dbgame ||!dbgame.length) channel.send(embed);
-        else if(dbgame.find(x => x.id == newrun.game)) channel.send(embed);
+      if(dbgame && dbgame[0]){
+      const channel = g.channels.cache.find(c => dbgame[0].channel == c.id);
+      if(channel && dbgame.find(x => x.id == newrun.game)) channel.send(embed);
         // sending the embed
       }
     });
+    
+   client.users.cache.forEach(u => {
+     const dbgame = storageObject[u.id];
+      if(dbgame && dbgame[0] && dbgame.find(x => x.id == newrun.game)) u.send(embed);
+        // sending the embed
+   });
       
     })
   }
