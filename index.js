@@ -62,7 +62,7 @@ for (const file of commandFiles) {
   }).on("error", (err) => {
     console.log("Error: " + err.message);
   });
-},6e5);
+},17e5);
 */
 
 
