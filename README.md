@@ -27,4 +27,4 @@ Special thanks to:
 - dad infinitum#6805 the owner of the repository this bot is built on, check it out [here](https://github.com/slashinfty/run-get)
 - daanolav#6416 for the idea of caching game name and cover for less requests 
 
-If you have any suggestions feel free to make a pull request ;)
+If you have any suggestions feel free to make an issue ;)
