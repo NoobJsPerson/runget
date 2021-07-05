@@ -23,7 +23,7 @@ const objtype = message.guild?message.guild.id:message.author.id
       const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${x}`);
     let ajson = await ares.json();
     if(!ajson.data){
-      message.reply(eerrormsg);
+      message.reply(errormsg);
       continue;
     }
     if(ajson.data[0]){
