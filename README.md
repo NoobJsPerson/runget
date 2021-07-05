@@ -5,7 +5,7 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 ## How to setup verified runs
 1. Invite the bot to your server (or host it from source code)
 2. Make sure bot has permission to send messages and embeds
-3. Make a channel and name it #new-runs
+3. Set the channel the bot will new runs in using .setchannel
 4. add the game(s) you want to see its/their runs using .addgame or .addgames (if you didn't add any it'll send all verified new runs from Speedrun.com)
 ## Commands
 - .addgame: adds the mentioned game into the gamelist
@@ -14,6 +14,7 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 - .deletegames: same as .deletegame but it can delete multiple games when they're seperated by |
 - .gamelist: sends the current server's gamelist in embed(s)
 - .help: sends a list of commands with their usage
+- .setchannel: sets the channel the bot will send new runs in (if no channel it'll be set to the current channel)
 - .invite: sends the bot's invite
 - .source: sends the link to this repository
 ## Notes
