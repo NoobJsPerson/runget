@@ -18,9 +18,6 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 - .source: sends the link to this repository
 ## Notes
 * when using .addgame command you should pass the id, the abbreviation or game name (case sensitive)
-* when using .addgames command you should pass the same arguments as .addgame but don't add unnecessary spaces. Ex:
-✖️ .addgames mcbe | mcbece
-✔️ .addgames mcbe|mcbece
 * when hosting the bot from source code make a .env file and copy the content of .env.example file to it and replace **yourtokenhere** by your bot token and delete the .env.example file
 ## Credits
 Special thanks to:
