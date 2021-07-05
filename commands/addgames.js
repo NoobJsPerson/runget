@@ -19,7 +19,7 @@ module.exports = {
 			const res = await fetch(`https://www.speedrun.com/api/v1/games/${x}`);
 			let json = await res.json();
 			if (!json.data) {
-			  const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${x}`);
+				const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${x}`);
 				let ajson = await ares.json();
 				if (!ajson.data) {
 					message.reply(eerrormsg);
