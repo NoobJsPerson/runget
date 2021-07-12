@@ -19,7 +19,7 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 - .source: sends the link to this repository
 ## Notes
 * when using .addgame command you should pass the id, the abbreviation or game name (case sensitive)
-* when hosting the bot from source code make a .env file and copy the content of .env.example file to it and replace **yourtokenhere** by your bot token and delete the .env.example file
+* when hosting the bot from source code rename `config.json.example` to `config.json`and replace **yourtokenhere** by your bot token.
 ## Credits
 Special thanks to:
 - dad infinitum#6805 the owner of the repository this bot is built on, check it out [here](https://github.com/slashinfty/run-get)
