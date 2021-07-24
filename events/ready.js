@@ -7,30 +7,17 @@ module.exports = {
 ㅤㅤconsole.log('bot ready')
 ㅤㅤclient.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
 ㅤㅤlet er = new Collection();
-
-
-
-
 ㅤㅤsetInterval(async () => {
 ㅤㅤㅤconst content = await fs.promises.readFile('./storage.json');
 ㅤㅤㅤconst storageObject = JSON.parse(content);
-
-
-
-
-
 ㅤㅤㅤconst runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc').catch();
-
 ㅤㅤㅤconst runsjson = await runs.json();
-
 ㅤㅤㅤconst runsdata = runsjson.data;
 ㅤㅤㅤ//fetching newly verified runs
 ㅤㅤㅤrunsdata.forEach(run => client.runs.set(run.id, run))
 ㅤㅤㅤ//adding runs to client.runs collection
 ㅤㅤㅤclient.runs = client.runs.filter(x => runsdata.find(z => x.id == z.id));
 ㅤㅤㅤ// deleting old unnecessary runs from client.runs
-
-
 ㅤㅤㅤconst newruns = client.runs.filter(x => !er.has(x.id));
 ㅤㅤㅤ//filter the runs that existing runs collection doesn't have
 ㅤㅤㅤif (newruns.first()) {
@@ -38,8 +25,6 @@ module.exports = {
 ㅤㅤㅤㅤㅤlet level = '',
 ㅤㅤㅤㅤㅤㅤlvlid, top = 'N/A',
 ㅤㅤㅤㅤㅤㅤgame, cover, index, cache, guildid, user = '';
-
-
 ㅤㅤㅤㅤㅤconst guildarr = Object.entries(storageObject).find(x => x[1].find(y => y.id == newrun.game));
 ㅤㅤㅤㅤㅤif (guildarr) {
 ㅤㅤㅤㅤㅤㅤguildid = guildarr[0];
@@ -79,7 +64,6 @@ module.exports = {
 ㅤㅤㅤㅤㅤlet subcategoryName = '',
 ㅤㅤㅤㅤㅤㅤsubcategoryQuery = '';
 ㅤㅤㅤㅤㅤrunVariables.forEach(v => {
-
 ㅤㅤㅤㅤㅤㅤconst foundVariable = variablesjson.data.find(c => c.id === v[0]);
 ㅤㅤㅤㅤㅤㅤif (foundVariable['is-subcategory'] === true) {
 ㅤㅤㅤㅤㅤㅤㅤsubcategoryName += !subcategoryName ? foundVariable.values.values[v[1]].label : ', ' + foundVariable.values.values[v[1]].label;
@@ -100,8 +84,6 @@ module.exports = {
 ㅤㅤㅤㅤㅤconst topobj = leaderjson.data.runs.find(rundata => rundata.run.id == newrun.id);
 ㅤㅤㅤㅤㅤif (topobj) top = topobj.place;
 ㅤㅤㅤㅤㅤ// fetching place in leaderboards
-
-
 ㅤㅤㅤㅤㅤconst embed = new MessageEmbed()
 ㅤㅤㅤㅤㅤㅤ.setTitle(`${game}:${level} ${category} ${subcategoryName}`)
 ㅤㅤㅤㅤㅤㅤ.setColor('RANDOM')
@@ -135,6 +117,5 @@ module.exports = {
 ㅤㅤㅤ// deleting unnecessary old runs
 ㅤㅤ}, 60000);
 ㅤㅤ// using setInterval to repeat the process every minute
-
 ㅤ}
 }
