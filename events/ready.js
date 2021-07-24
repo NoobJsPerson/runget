@@ -1,137 +1,140 @@
-const {Collection,MessageEmbed} = require ('discord.js');
-const fs = require ('fs');
+const { Collection, MessageEmbed } = require('discord.js');
+const fs = require('fs');
 const fetch = require('node-fetch');
 module.exports = {
-  name:'ready',
-  async run(client,prefix){
-    console.log('bot ready')
-    client.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
-    let er = new Collection();
-    
-    
-        
-    
-setInterval(async () => {
-	const content = await fs.promises.readFile('./storage.json');
-const storageObject = JSON.parse(content);
+ㅤname: 'ready',
+ㅤasync run(client, prefix) {
+ㅤㅤconsole.log('bot ready')
+ㅤㅤclient.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
+ㅤㅤlet er = new Collection();
 
 
 
-  
-  
-    const runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc').catch();
 
-    const runsjson = await runs.json();
-    
-    const runsdata = runsjson.data;
-    //fetching newly verified runs
-runsdata.forEach(run => client.runs.set(run.id,run))
-   //adding runs to client.runs collection
- client.runs = client.runs.filter(x => runsdata.find(z => x.id == z.id));
-// deleting old unnecessary runs from client.runs
-   
-   
-  const newruns = client.runs.filter(x => !er.has(x.id));
- //filter the runs that existing runs collection doesn't have
-  if(newruns.first()){
-    newruns.forEach(async newrun =>{
-    let level='', lvlid, top='N/A', game, cover, index, cache, guildid, user = '';
+ㅤㅤsetInterval(async () => {
+ㅤㅤㅤconst content = await fs.promises.readFile('./storage.json');
+ㅤㅤㅤconst storageObject = JSON.parse(content);
 
-    
-const guildarr = Object.entries(storageObject).find(x => x[1].find(y => y.id == newrun.game));
-  if(guildarr){
-    guildid = guildarr[0];
-    index = guildarr[1].findIndex(x => x.id == newrun.game);
-    cache = guildarr[1][index];
-    game = cache.name;
-    if(cache.url)
-cover = cache.url;
-   else {
-	const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`);
-   const gamejson = await gameres.json();
- //fetching game data
-   cover = gamejson.data.assets['cover-large'].uri;
-if(cache){
-storageObject[guildid][index].url = cover;
-await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
-  }
-     }
-  }
-    for(let player of newrun.players){
-   const userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`).catch();
-   const userjson = await userres.json();
-   const i = newrun.players.findIndex(x => x.id == player.id )
-      user += (user?i==newruns.players.length-1?' and ':', ':'')+userjson.data.names.international
 
-   }
-     // fetching user data
-   
-   const categoryres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}`).catch();
-   const categoryjson = await categoryres.json();
-   const category = categoryjson.data.name;
-   // fetching category data
-   const variablesres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}/variables`).catch();
-   const variablesjson = await variablesres.json();
-   
-   const runVariables = Object.entries(newrun.values);
-		    let subcategoryName = '',subcategoryQuery = '';
-		    runVariables.forEach(v => {
-		    
-			    const foundVariable = variablesjson.data.find(c => c.id === v[0]);
-			    if (foundVariable['is-subcategory'] === true) {
-				    subcategoryName += !subcategoryName ? foundVariable.values.values[v[1]].label : ', ' + foundVariable.values.values[v[1]].label;
-				    subcategoryQuery += !subcategoryQuery? '?var-' + v[0] + '=' + v[1] : '&var-' + v[0] + '=' + v[1];
-			    
-		    }
-		    });
-// fetching subcategory data if found
-   if(newrun.level){
-        const lvlres = await fetch(`https://speedrun.com/api/v1/levels/${newrun.level}`);
-        const lvljson = await lvlres.json();
-        level = lvljson.data.name
-        lvlid = lvljson.data.id
-        //fetching level data if found
-   }
-     const leaderres = await fetch(`https://speedrun.com/api/v1/leaderboards/${newrun.game}/${level?`level/${lvlid}`:'category'}/${categoryjson.data.id}${subcategoryQuery}`);
-     const leaderjson = await leaderres.json();
-     const topobj = leaderjson.data.runs.find(rundata => rundata.run.id == newrun.id);
-     if(topobj) top = topobj.place;
-     // fetching place in leaderboards
-     
-   
-    const embed = new MessageEmbed()
-    .setTitle(`${game}:${level} ${category} ${subcategoryName}`)
-    .setColor('RANDOM')
-    .setDescription(`**${newrun.times.primary.replace('PT','').replace('H',' hours ').replace('M',' minutes ').replace('S',' seconds')} by ${user}**`)
-    .setURL(newrun.weblink)
-    .addField('Verified at:','`'+newrun.status['verify-date'].replace('T',' ').replace('Z','')+'`', true)
-    .setThumbnail(cover)
-    .addField('Place in leaderboards',top,true);
- // constructing the run embed
-        client.guilds.cache.forEach(g => {
-      const dbgame = storageObject[g.id];
-      if(dbgame && dbgame[0]){
-      const channel = g.channels.cache.find(c => dbgame[0].channel == c.id);
-      if(channel && dbgame.find(x => x.id == newrun.game)) channel.send(embed);
-        // sending the embed
-      }
-    });
-    
-   client.users.cache.forEach(u => {
-     const dbgame = storageObject[u.id];
-      if(dbgame && dbgame[0] && dbgame.find(x => x.id == newrun.game)) u.send(embed);
-        // sending the embed
-   });
-      
-    })
-  }
-   client.runs.forEach(run=> er.set(run.id,run));
-   //setting new runs to existing to not get detected as new next time
 
-	er = er.filter(x => client.runs.has(x.id));
-// deleting unnecessary old runs
-},60000);
-// using setInterval to repeat the process every minute
 
-  }
+
+ㅤㅤㅤconst runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc').catch();
+
+ㅤㅤㅤconst runsjson = await runs.json();
+
+ㅤㅤㅤconst runsdata = runsjson.data;
+ㅤㅤㅤ//fetching newly verified runs
+ㅤㅤㅤrunsdata.forEach(run => client.runs.set(run.id, run))
+ㅤㅤㅤ//adding runs to client.runs collection
+ㅤㅤㅤclient.runs = client.runs.filter(x => runsdata.find(z => x.id == z.id));
+ㅤㅤㅤ// deleting old unnecessary runs from client.runs
+
+
+ㅤㅤㅤconst newruns = client.runs.filter(x => !er.has(x.id));
+ㅤㅤㅤ//filter the runs that existing runs collection doesn't have
+ㅤㅤㅤif (newruns.first()) {
+ㅤㅤㅤㅤnewruns.forEach(async newrun => {
+ㅤㅤㅤㅤㅤlet level = '',
+ㅤㅤㅤㅤㅤㅤlvlid, top = 'N/A',
+ㅤㅤㅤㅤㅤㅤgame, cover, index, cache, guildid, user = '';
+
+
+ㅤㅤㅤㅤㅤconst guildarr = Object.entries(storageObject).find(x => x[1].find(y => y.id == newrun.game));
+ㅤㅤㅤㅤㅤif (guildarr) {
+ㅤㅤㅤㅤㅤㅤguildid = guildarr[0];
+ㅤㅤㅤㅤㅤㅤindex = guildarr[1].findIndex(x => x.id == newrun.game);
+ㅤㅤㅤㅤㅤㅤcache = guildarr[1][index];
+ㅤㅤㅤㅤㅤㅤgame = cache.name;
+ㅤㅤㅤㅤㅤㅤif (cache.url)
+ㅤㅤㅤㅤㅤㅤㅤcover = cache.url;
+ㅤㅤㅤㅤㅤㅤelse {
+ㅤㅤㅤㅤㅤㅤㅤconst gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`);
+ㅤㅤㅤㅤㅤㅤㅤconst gamejson = await gameres.json();
+ㅤㅤㅤㅤㅤㅤㅤ//fetching game data
+ㅤㅤㅤㅤㅤㅤㅤcover = gamejson.data.assets['cover-large'].uri;
+ㅤㅤㅤㅤㅤㅤㅤif (cache) {
+ㅤㅤㅤㅤㅤㅤㅤㅤstorageObject[guildid][index].url = cover;
+ㅤㅤㅤㅤㅤㅤㅤㅤawait fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
+ㅤㅤㅤㅤㅤㅤㅤ}
+ㅤㅤㅤㅤㅤㅤ}
+ㅤㅤㅤㅤㅤ}
+ㅤㅤㅤㅤㅤfor (let player of newrun.players) {
+ㅤㅤㅤㅤㅤㅤconst userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`).catch();
+ㅤㅤㅤㅤㅤㅤconst userjson = await userres.json();
+ㅤㅤㅤㅤㅤㅤconst i = newrun.players.findIndex(x => x.id == player.id)
+ㅤㅤㅤㅤㅤㅤuser += (user ? i == newruns.players.length - 1 ? ' and ' : ', ' : '') + userjson.data.names.international
+
+ㅤㅤㅤㅤㅤ}
+ㅤㅤㅤㅤㅤ// fetching user data
+
+ㅤㅤㅤㅤㅤconst categoryres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}`).catch();
+ㅤㅤㅤㅤㅤconst categoryjson = await categoryres.json();
+ㅤㅤㅤㅤㅤconst category = categoryjson.data.name;
+ㅤㅤㅤㅤㅤ// fetching category data
+ㅤㅤㅤㅤㅤconst variablesres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}/variables`).catch();
+ㅤㅤㅤㅤㅤconst variablesjson = await variablesres.json();
+
+ㅤㅤㅤㅤㅤconst runVariables = Object.entries(newrun.values);
+ㅤㅤㅤㅤㅤlet subcategoryName = '',
+ㅤㅤㅤㅤㅤㅤsubcategoryQuery = '';
+ㅤㅤㅤㅤㅤrunVariables.forEach(v => {
+
+ㅤㅤㅤㅤㅤㅤconst foundVariable = variablesjson.data.find(c => c.id === v[0]);
+ㅤㅤㅤㅤㅤㅤif (foundVariable['is-subcategory'] === true) {
+ㅤㅤㅤㅤㅤㅤㅤsubcategoryName += !subcategoryName ? foundVariable.values.values[v[1]].label : ', ' + foundVariable.values.values[v[1]].label;
+ㅤㅤㅤㅤㅤㅤㅤsubcategoryQuery += !subcategoryQuery ? '?var-' + v[0] + '=' + v[1] : '&var-' + v[0] + '=' + v[1];
+
+ㅤㅤㅤㅤㅤㅤ}
+ㅤㅤㅤㅤㅤ});
+ㅤㅤㅤㅤㅤ// fetching subcategory data if found
+ㅤㅤㅤㅤㅤif (newrun.level) {
+ㅤㅤㅤㅤㅤㅤconst lvlres = await fetch(`https://speedrun.com/api/v1/levels/${newrun.level}`);
+ㅤㅤㅤㅤㅤㅤconst lvljson = await lvlres.json();
+ㅤㅤㅤㅤㅤㅤlevel = lvljson.data.name
+ㅤㅤㅤㅤㅤㅤlvlid = lvljson.data.id
+ㅤㅤㅤㅤㅤㅤ//fetching level data if found
+ㅤㅤㅤㅤㅤ}
+ㅤㅤㅤㅤㅤconst leaderres = await fetch(`https://speedrun.com/api/v1/leaderboards/${newrun.game}/${level?`level/${lvlid}`:'category'}/${categoryjson.data.id}${subcategoryQuery}`);
+ㅤㅤㅤㅤㅤconst leaderjson = await leaderres.json();
+ㅤㅤㅤㅤㅤconst topobj = leaderjson.data.runs.find(rundata => rundata.run.id == newrun.id);
+ㅤㅤㅤㅤㅤif (topobj) top = topobj.place;
+ㅤㅤㅤㅤㅤ// fetching place in leaderboards
+
+
+ㅤㅤㅤㅤㅤconst embed = new MessageEmbed()
+ㅤㅤㅤㅤㅤㅤ.setTitle(`${game}:${level} ${category} ${subcategoryName}`)
+ㅤㅤㅤㅤㅤㅤ.setColor('RANDOM')
+ㅤㅤㅤㅤㅤㅤ.setDescription(`**${newrun.times.primary.replace('PT','').replace('H',' hours ').replace('M',' minutes ').replace('S',' seconds')} by ${user}**`)
+ㅤㅤㅤㅤㅤㅤ.setURL(newrun.weblink)
+ㅤㅤㅤㅤㅤㅤ.addField('Verified at:', '`' + newrun.status['verify-date'].replace('T', ' ').replace('Z', '') + '`', true)
+ㅤㅤㅤㅤㅤㅤ.setThumbnail(cover)
+ㅤㅤㅤㅤㅤㅤ.addField('Place in leaderboards', top, true);
+ㅤㅤㅤㅤㅤ// constructing the run embed
+ㅤㅤㅤㅤㅤclient.guilds.cache.forEach(g => {
+ㅤㅤㅤㅤㅤㅤconst dbgame = storageObject[g.id];
+ㅤㅤㅤㅤㅤㅤif (dbgame && dbgame[0]) {
+ㅤㅤㅤㅤㅤㅤㅤconst channel = g.channels.cache.find(c => dbgame[0].channel == c.id);
+ㅤㅤㅤㅤㅤㅤㅤif (channel && dbgame.find(x => x.id == newrun.game)) channel.send(embed);
+ㅤㅤㅤㅤㅤㅤㅤ// sending the embed
+ㅤㅤㅤㅤㅤㅤ}
+ㅤㅤㅤㅤㅤ});
+
+ㅤㅤㅤㅤㅤclient.users.cache.forEach(u => {
+ㅤㅤㅤㅤㅤㅤconst dbgame = storageObject[u.id];
+ㅤㅤㅤㅤㅤㅤif (dbgame && dbgame[0] && dbgame.find(x => x.id == newrun.game)) u.send(embed);
+ㅤㅤㅤㅤㅤㅤ// sending the embed
+ㅤㅤㅤㅤㅤ});
+
+ㅤㅤㅤㅤ})
+ㅤㅤㅤ}
+ㅤㅤㅤclient.runs.forEach(run => er.set(run.id, run));
+ㅤㅤㅤ//setting new runs to existing to not get detected as new next time
+
+ㅤㅤㅤer = er.filter(x => client.runs.has(x.id));
+ㅤㅤㅤ// deleting unnecessary old runs
+ㅤㅤ}, 60000);
+ㅤㅤ// using setInterval to repeat the process every minute
+
+ㅤ}
 }
