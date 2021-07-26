@@ -1,7 +1,8 @@
+require('dotenv').config
 const fs = require('fs'),
   Discord = require('discord.js'),
   path = require('path'),
-  {TOKEN, PREFIX} = require('config.json'),
+  {TOKEN, PREFIX} = process,
   client = new Discord.Client({
     ws: {
       properties: {
