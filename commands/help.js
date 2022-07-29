@@ -9,10 +9,10 @@ module.exports = {
 
   aliases: ['h'],
 
-  execute: async (message, args, client, prefix) => {
+  execute: async (message, args, _Guild, _Game, prefix) => {
 
     if (!args.length) {
-      const cmds = client.commands.map(x => `• ${x.name} ${x.usage?`\`${x.usage}\``:''}: ${x.description}`).join('\n\n')
+      const cmds = message.client.commands.map(x => `• ${x.name} ${x.usage?`\`${x.usage}\``:''}: ${x.description}`).join('\n\n')
 
       
 

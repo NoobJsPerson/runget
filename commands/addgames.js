@@ -5,24 +5,30 @@ module.exports = {
 	aliases: ['ags'],
 	usage: '<website-name|id>',
 	description: 'adds the games you want to see their runs to the gamelist',
-	async execute(message, args) {
+	async execute(message, args, Guild, Game) {
 		if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
 		let argz = args.join(' ').split('|');
-		argz = argz.map(x => x.replace(' ', '%20'))
-		const content = await fs.promises.readFile('./storage.json');
-		const storageObject = JSON.parse(content);
-		const objtype = message.guild ? message.guild.id : message.author.id
+		argz = argz.map(x => x.replace(' ', '%20'));
+		const [guild,] = await Guild.findOrCreate({
+			where: {
+			  id: message.guild ? message.guild.id : message.author.id
+			},
+			defaults: {
+			  channel: message.guild && message.guild.channels.cache.find(x => x.name == "new-runs")?.id || null,
+			  isUser: !message.guild
+			}
+		});
+		let games = [];
 		for (const x of argz) {
 			x = x.trim();
-			const errormsg = `are you sure https://www.speedrun.com/${x} exists
-||if it didn't work try deleting unnecessary spaces||`;
+			const errormsg = `are you sure https://www.speedrun.com/${x} exists\n||if it didn't work try deleting unnecessary spaces||`;
 			const res = await fetch(`https://www.speedrun.com/api/v1/games/${x}`);
 			let json = await res.json();
 			if (!json.data) {
 				const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${x}`);
 				let ajson = await ares.json();
 				if (!ajson.data) {
-					message.reply(eerrormsg);
+					message.reply(errormsg);
 					continue;
 				}
 				if (ajson.data[0]) {
@@ -39,23 +45,26 @@ module.exports = {
 					}
 				}
 			}
-			const obj = { id: json.data.id, name: json.data.names.international, url: json.data.assets['cover-large'].uri };
-
-			if (storageObject[objtype] &&
-				storageObject[objtype].find(y => y.id == json.data.id)) {
+			const [game,] = await Game.findOrCreate({
+				where: {
+				  id: json.data.id
+				},
+				defaults: {
+				  name: json.data.names.international,
+				  url: json.data.assets['cover-large'].uri
+				}
+			  }),
+			  isGameInGuild = await guild?.hasGame(game);
+			  if (isGameInGuild) {
 				message.reply('i can\'t add a game thats already in the list');
 				continue;
-			}
-
-			if (storageObject[objtype] instanceof Array) {
-				storageObject[objtype].push(obj);
-			} else {
-				storageObject[objtype] = [obj];
-			}
+			  }
+			games.push(game)
 			message.channel.send(`the game ${json.data.names.international} has been successfully added to the runlist`);
 
 		}
-		await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
+		await guild.addGames(games);
+
 
 	}
 };

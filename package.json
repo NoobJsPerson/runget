@@ -1,5 +1,5 @@
 {
-  "name": "RunGet",
+  "name": "runget",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,14 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "NoobJsPerson",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.5.1",
     "dotenv": "10.0.0",
-    "express": "^4.17.1",
     "node-fetch": "^2.6.1",
     "sequelize": "^6.21.3",
-    "sqlite": "^4.1.2"
+    "sqlite3": "^5.0.10"
   }
 }
