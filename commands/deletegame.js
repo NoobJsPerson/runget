@@ -39,6 +39,8 @@ module.exports = {
     const isGameInGuild = guild.hasGame(game);
     if (!isGameInGuild) return message.reply('i can\'t delete a game thats not in the list');
     guild.removeGame(game)
+    const gameGuilds = await game.getGuilds();
+    if(!gameGuilds.length) await game.destroy();
     message.channel.send(`the game ${json.data.names.international} got successfully deleted`);
   }
 };

@@ -1,9 +1,7 @@
-const fs = require('fs');
-const fetch = require('node-fetch');
 module.exports = {
   name: 'gamelist',
   description: 'displays the list of games that its runs will be sent',
-  async execute(message, args, Guild) {
+  async execute(message, args, Guild, _Game, prefix) {
     const objtype = message.guild ? message.guild.id : message.author.id;
 
     function underify(array) {
@@ -20,19 +18,14 @@ module.exports = {
       return total;
 
     }
-    const [guild,] = await Guild.findOrCreate({
+    const [guild,] = await Guild.findOne({
       where: {
         id: message.guild ? message.guild.id : message.author.id
-      },
-      defaults: {
-        channel: message.guild && message.guild.channels.cache.find(x => x.name == "new-runs")?.id || null,
-        isUser: !message.guild
       }
     });
+    if(!guild) return message.reply(`the gamelist is currently empty add games to it using ${prefix}addgame`);
     const list = await guild.getGames();
-
-
-    if (!list.length) return message.reply('the gamelist is currently empty add games to it using .addgame');
+    if (!list.length) return message.reply(`the gamelist is currently empty add games to it using ${prefix}addgame`);
     const sorted = list.map(x => x.name).sort(),
       lists = underify(sorted);
 

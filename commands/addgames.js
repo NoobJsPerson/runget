@@ -19,7 +19,7 @@ module.exports = {
 			}
 		});
 		let games = [];
-		for (const x of argz) {
+		for (let x of argz) {
 			x = x.trim();
 			const errormsg = `are you sure https://www.speedrun.com/${x} exists\n||if it didn't work try deleting unnecessary spaces||`;
 			const res = await fetch(`https://www.speedrun.com/api/v1/games/${x}`);

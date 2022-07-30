@@ -20,7 +20,7 @@ module.exports = {
       }
     });
 
-    for (const x of argz) {
+    for (let x of argz) {
       x = x.trim();
       const errormsg = `are you sure https://www.speedrun.com/${x} exists\n||if it didn't work try deleting unnecessary spaces||`;
       const res = await fetch(`https://www.speedrun.com/api/v1/games/${x}`);
@@ -58,9 +58,11 @@ module.exports = {
         message.reply('i can\'t delete a game thats not in the list');
         continue;
       }
-      games.push(game)
+      const gameGuilds = await game.getGuilds();
+      if(gameGuilds.length === 1) await game.destroy();
+      else games.push(game)
       message.channel.send(`the game ${json.data.names.international} got successfully deleted`);
     }
-    await guild.removeGames(games);
+    if(games.length) await guild.removeGames(games);
   }
 };
