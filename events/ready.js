@@ -1,4 +1,3 @@
-const { channel } = require('diagnostics_channel');
 const { Collection, MessageEmbed } = require('discord.js'),
 	fs = require('fs'),
 	{ Op } = require("sequelize"),
@@ -11,8 +10,6 @@ module.exports = {
 		client.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
 		let er = new Collection();
 		setInterval(async () => {
-			const content = await fs.promises.readFile('./storage.json');
-			const storageObject = JSON.parse(content);
 			const runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc').catch();
 			const runsjson = await runs.json();
 			const runsdata = runsjson.data;
@@ -21,32 +18,31 @@ module.exports = {
 			//adding runs to client.runs collection
 			client.runs = client.runs.filter(x => runsdata.find(z => x.id == z.id));
 			// deleting old unnecessary runs from client.runs
-			const newruns = client.runs.filter(x => !er.has(x.id));
-			//filter the runs that existing runs collection doesn't have
+			let newruns = client.runs.filter(x => !er.has(x.id));
+			// let the newruns be the runs that existing runs collection doesn't have
+			const gameIds = newruns.map(x => x.game);
+			if (!gameIds.length) return;
+			const games = await Game.findAll({
+				where: {
+					id: {
+						[Op.in]: gameIds
+					}
+				}
+			});
+			newruns = newruns.filter(x => games.find(y => y.id == x.game));
+			// remove all the new runs that belong to a game thats not in the database
 			if (newruns.first()) {
 				newruns.forEach(async newrun => {
 					let level = '',
 						lvlid, top = 'N/A',
 						game, cover, user = '';
 					// const guildarr = Object.entries(storageObject).find(x => x[1].find(y => y.id == newrun.game));
-					const gameObj = await Game.findOne({
-						where: {
-							id: newrun.game
-						}
-					})
-					if (!gameObj) return;
-						// guildid = guildarr[0];
-						// index = guildarr[1].findIndex(x => x.id == newrun.game);
-						// cache = guildarr[1][index];
-						game = gameObj.id;
-						if (gameObj.url) cover = gameObj.url;
-						else {
-							const gameres = await fetch(`https://speedrun.com/api/v1/games/${newrun.game}`);
-							const gamejson = await gameres.json();
-							//fetching game data
-							cover = gameObj.url = gamejson.data.assets['cover-large'].uri;
-							await gameObj.save();						
-						}
+					const gameObj = games.find(x => x.id == newrun.game);
+					// guildid = guildarr[0];
+					// index = guildarr[1].findIndex(x => x.id == newrun.game);
+					// cache = guildarr[1][index];
+					game = gameObj.name;
+					cover = gameObj.url;
 					for (let player of newrun.players) {
 						const userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`).catch();
 						const userjson = await userres.json();
@@ -97,17 +93,17 @@ module.exports = {
 						.addField('Place in leaderboards', top, true);
 					// constructing the run embed
 					const guilds = await Guild.findAll({
-						where : {
+						where: {
 							channel: {
 								[Op.not]: null
 							}
 						}
 					});
 					for (let guild of guilds) {
-						const isGameInGuild = await guild.hasGame(game);
-						if(!isGameInGuild) continue;
-						if(guild.isUser) client.users.cache.get(guild.id).send(embed);
-						else if(guild.channel) client.channels.cache.get(guild.channel).send(embed)
+						const isGameInGuild = await guild.hasGame(gameObj);
+						if (!isGameInGuild) continue;
+						if (guild.isUser) client.users.cache.get(guild.id).send(embed);
+						else if (guild.channel) client.channels.cache.get(guild.channel).send(embed)
 
 					}
 					// client.guilds.cache.forEach(g => {

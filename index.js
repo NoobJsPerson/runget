@@ -29,6 +29,8 @@ const fs = require('fs'),
       allowNull: true
     },
     isUser: Sequelize.BOOLEAN
+  }, {
+    timestamps: false
   }),
   Game = sequelize.define("game",{
     id: {
@@ -36,14 +38,31 @@ const fs = require('fs'),
       primaryKey: true,
     },
     name: Sequelize.STRING,
-    url: {
+    url: Sequelize.STRING
+  }, {
+    timestamps: false
+  }),
+  GuildGames = sequelize.define("guildGame",{
+    gameId: {
       type: Sequelize.STRING,
-      allowNull: true
+      references: {
+        model: Game,
+        key: 'id'
+      }
+    },
+    guildId: {
+      type: Sequelize.STRING,
+      references: {
+        model: Guild,
+        key: 'id'
+      }
     }
+  }, {
+    timestamps: false
   });
   // makes the tables if they don't exist, does nothing otherwise.
-  Guild.belongsToMany(Game, { through: "GuildGames" } );
-  Game.belongsToMany(Guild, { through: "GuildGames" });
+  Guild.belongsToMany(Game, { through: GuildGames } );
+  Game.belongsToMany(Guild, { through: GuildGames });
   sequelize.sync();
   ['cooldowns','events','commands','runs'].forEach(x => client[x] = new Collection());
 fs.readdir('./events/', (err, files) => { // We use the method readdir to read what is in the events folder
