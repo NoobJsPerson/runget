@@ -4,7 +4,7 @@ module.exports = {
   name: 'deletegames',
   aliases: ['ags'],
   usage: '<website-name|id>',
-  description: 'deletes the games you don\'t want to see their runs to the gamelist',
+  description: 'deletes the games (seperated by "|") you don\'t want to see their runs to the gamelist',
   async execute(message, args, Guild, Game) {
     if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
     let argz = args.join(' ').split('|'),

@@ -4,7 +4,7 @@ module.exports = {
 	name: 'addgames',
 	aliases: ['ags'],
 	usage: '<website-name|id>',
-	description: 'adds the games you want to see their runs to the gamelist',
+	description: 'adds the games (seperated by "|") you want to see their runs to the gamelist',
 	async execute(message, args, Guild, Game) {
 		if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
 		let argz = args.join(' ').split('|');

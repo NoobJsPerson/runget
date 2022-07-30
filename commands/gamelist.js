@@ -18,7 +18,7 @@ module.exports = {
       return total;
 
     }
-    const [guild,] = await Guild.findOne({
+    const guild = await Guild.findOne({
       where: {
         id: message.guild ? message.guild.id : message.author.id
       }

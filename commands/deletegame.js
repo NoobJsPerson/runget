@@ -7,7 +7,7 @@ module.exports = {
   description: 'delete the game you don\'t want to see its runs from the gamelist',
   async execute(message, args, Guild, Game) {
     if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
-    const [guild,] = await Guild.findOrCreate({
+    const guild = await Guild.findOrCreate({
       where: {
         id: message.guild ? message.guild.id : message.author.id
       },
