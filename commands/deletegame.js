@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const fs = require('fs');
 module.exports = {
   name: 'deletegame',
   aliases: ['dg'],
