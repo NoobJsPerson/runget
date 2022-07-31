@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message, args, Guild, Game) {
 		if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
 		let argz = args.join(' ').split('|');
-		argz = argz.map(x => x.replace(' ', '%20'));
+		argz = argz.map(x => encodeURIComponent(x));
 		const [guild,] = await Guild.findOrCreate({
 			where: {
 			  id: message.guild ? message.guild.id : message.author.id
@@ -32,7 +32,7 @@ module.exports = {
 					continue;
 				}
 				if (ajson.data[0]) {
-					json.data = ajson.data.find(y => y.names.international == x.replace('%20', ' '))
+					json.data = ajson.data.find(y => y.names.international == decodeURIComponent(x))
 					if (!json.data) {
 						message.reply(errormsg);
 						continue;

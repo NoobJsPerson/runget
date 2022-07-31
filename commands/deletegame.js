@@ -7,16 +7,13 @@ module.exports = {
   description: 'delete the game you don\'t want to see its runs from the gamelist',
   async execute(message, args, Guild, Game) {
     if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
-    const guild = await Guild.findOrCreate({
+    const guild = await Guild.findOne({
       where: {
         id: message.guild ? message.guild.id : message.author.id
-      },
-      defaults: {
-        channel: message.guild && message.guild.channels.cache.find(x => x.name == "new-runs")?.id || null,
-        isUser: !message.guild
       }
     });
-    const input = args.join("%20")
+    if(!guild) return message.reply("i can't delete a game from a gamelist that's empty");
+    const input = decodeURIComponent(args.join(" "));
     const res = await fetch(`https://www.speedrun.com/api/v1/games/${input}`);
     let json = await res.json();
     if (!json.data) {

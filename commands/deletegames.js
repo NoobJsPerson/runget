@@ -9,16 +9,13 @@ module.exports = {
     if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
     let argz = args.join(' ').split('|'),
       games = [];
-    argz = argz.map(x => x.replace(' ', '%20'));
-    const [guild,] = await Guild.findOrCreate({
+    argz = argz.map(x => encodeURIComponent(x));
+    const guild = await Guild.findOne({
       where: {
         id: message.guild ? message.guild.id : message.author.id
-      },
-      defaults: {
-        channel: message.guild && message.guild.channels.cache.find(x => x.name == "new-runs")?.id || null,
-        isUser: !message.guild
       }
     });
+    if(!guild) return message.reply("i can't delete a game from a gamelist that's empty");
 
     for (let x of argz) {
       x = x.trim();

@@ -7,7 +7,7 @@ module.exports = {
   description: 'adds the game you want to see its runs to the gamelist',
   async execute(message, args, Guild, Game) {
     if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
-    const input = args.join('%20')
+    const input = decodeURIComponent(args.join(' '))
     const errormsg = "please input a valid name, abbreviation or id";
     const res = await fetch(`https://www.speedrun.com/api/v1/games/${input}`);
     let json = await res.json();

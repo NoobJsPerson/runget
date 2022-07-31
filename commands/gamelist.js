@@ -1,9 +1,7 @@
 module.exports = {
   name: 'gamelist',
   description: 'displays the list of games that its runs will be sent',
-  async execute(message, args, Guild, _Game, prefix) {
-    const objtype = message.guild ? message.guild.id : message.author.id;
-
+  async execute(message, _args, Guild, _Game, prefix) {
     function underify(array) {
       if (`•${array.join('\n•')}`.length <= 2048) return [array];
       let total = [], secondarray = [];
