@@ -9,12 +9,13 @@ module.exports = {
 		if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
 		let argz = args.join(' ').split('|');
 		argz = argz.map(x => encodeURIComponent(x));
+		const channel = message.guild && message.guild.channels.cache.find(x => x.name == "new-runs");
 		const [guild,] = await Guild.findOrCreate({
 			where: {
 			  id: message.guild ? message.guild.id : message.author.id
 			},
 			defaults: {
-			  channel: message.guild && message.guild.channels.cache.find(x => x.name == "new-runs")?.id || null,
+			  channel: channel && channel.id || null,
 			  isUser: !message.guild
 			}
 		});

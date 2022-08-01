@@ -35,12 +35,13 @@ module.exports = {
         url: json.data.assets['cover-large'].uri
       }
     }),
+    channel = message.guild && message.guild.channels.cache.find(x => x.name == "new-runs"),
     [guild,] = await Guild.findOrCreate({
         where: {
           id: message.guild ? message.guild.id : message.author.id
         },
         defaults: {
-          channel: message.guild && message.guild.channels.cache.find(x => x.name == "new-runs")?.id || null,
+          channel: channel && channel.id || null,
           isUser: !message.guild
         }
     }),
