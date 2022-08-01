@@ -10,7 +10,7 @@ module.exports = {
 		let argz = args.join(' ').split('|');
 		argz = argz.map(x => encodeURIComponent(x));
 		const channel = message.guild && message.guild.channels.cache.find(x => x.name == "new-runs");
-		const [guild,] = await Guild.findOrCreate({
+		const [guild, created] = await Guild.findOrCreate({
 			where: {
 			  id: message.guild ? message.guild.id : message.author.id
 			},
@@ -55,7 +55,7 @@ module.exports = {
 				  url: json.data.assets['cover-large'].uri
 				}
 			  }),
-			  isGameInGuild = await guild?.hasGame(game);
+			  isGameInGuild = !created && await guild.hasGame(game);
 			  if (isGameInGuild) {
 				message.reply('i can\'t add a game thats already in the list');
 				continue;

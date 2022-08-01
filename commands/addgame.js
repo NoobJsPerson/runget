@@ -36,7 +36,7 @@ module.exports = {
       }
     }),
     channel = message.guild && message.guild.channels.cache.find(x => x.name == "new-runs"),
-    [guild,] = await Guild.findOrCreate({
+    [guild, created] = await Guild.findOrCreate({
         where: {
           id: message.guild ? message.guild.id : message.author.id
         },
@@ -45,7 +45,7 @@ module.exports = {
           isUser: !message.guild
         }
     }),
-    isGameInGuild = await guild?.hasGame(game);
+    isGameInGuild = !created && await guild.hasGame(game);
     if (isGameInGuild) return message.reply('i can\'t add a game thats already in the list');
     await guild.addGame(game);
     // if (storageObject[objtype] instanceof Array) {
