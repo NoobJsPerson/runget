@@ -10,6 +10,7 @@ module.exports = {
 		client.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
 		let er = new Collection();
 		setInterval(async () => {
+			console.log("a minute passed!")
 			const runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc').catch();
 			const runsjson = await runs.json();
 			const runsdata = runsjson.data;
@@ -33,6 +34,7 @@ module.exports = {
 			// remove all the new runs that belong to a game thats not in the database
 			if (newruns.first()) {
 				newruns.forEach(async newrun => {
+					console.log("new run found")
 					let level = '',
 						lvlid, top = 'N/A',
 						game, cover, user = '';
@@ -91,20 +93,30 @@ module.exports = {
 						.addField('Verified at:', '`' + newrun.status['verify-date'].replace('T', ' ').replace('Z', '') + '`', true)
 						.setThumbnail(cover)
 						.addField('Place in leaderboards', top, true);
+					console.log("made embed!")
 					// constructing the run embed
 					const guilds = await Guild.findAll({
+						include: {
+						  model: Game,
+						  where: {
+							id: newrun.game
+						  }
+						},
 						where: {
-							channel: {
-								[Op.not]: null
-							}
+							[Op.or]: [{
+								channel: {
+									[Op.not]: null
+								}
+							},{
+								isUser: true
+							}]
 						}
-					});
+					  });
+					  if (!guilds.length) return
 					for (let guild of guilds) {
-						const isGameInGuild = await guild.hasGame(gameObj);
-						if (!isGameInGuild) continue;
+						console.log("sent run")
 						if (guild.isUser) client.users.cache.get(guild.id).send(embed);
-						else if (guild.channel) client.channels.cache.get(guild.channel).send(embed)
-
+						else client.channels.cache.get(guild.channel).send(embed)
 					}
 					// client.guilds.cache.forEach(g => {
 					// 	const dbgame = storageObject[g.id];

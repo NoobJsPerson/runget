@@ -8,7 +8,8 @@ const fs = require('fs'),
   // let sequelise access the database
   sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: 'database.sqlite'
+    storage: 'database.sqlite',
+    logging: false
   }),
   // define the client for our discord bot
   client = new Client({
