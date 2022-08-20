@@ -1,5 +1,5 @@
 const { Collection, MessageEmbed } = require('discord.js'),
-	fs = require('fs'),
+	handlePromise = require('../handlePromise.js'),
 	{ Op } = require("sequelize"),
 	fetch = require('node-fetch');
 module.exports = {
@@ -11,7 +11,8 @@ module.exports = {
 		let er = new Collection();
 		setInterval(async () => {
 			console.log("a minute passed!")
-			const runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc').catch();
+			const [runs, error] = await handlePromise(fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc'));
+			if(error) return;
 			const runsjson = await runs.json();
 			const runsdata = runsjson.data;
 			//fetching newly verified runs
