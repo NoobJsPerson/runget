@@ -28,7 +28,11 @@ module.exports = {
 				return message.reply(`please wait ${duration(expirationTime, now)} before reusing the \`${cmd.name}\` command.`).then(msg => msg.delete({ timeout: 5000 }));
 			}
 		}
-		cmd.execute(message, args, Guild, Game, prefix);
+		try {
+			cmd.execute(message, args, Guild, Game, prefix);
+		} catch(error) {
+			console.error(error.stack);
+		}
 		timestamps.set(message.author.id, now);
 
 		setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);

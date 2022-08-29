@@ -71,7 +71,13 @@ fs.readdir('./events/', (err, files) => { // We use the method readdir to read w
     const module = require(`./events/${file}`);
     // Try catch block to throw an error if the code in try{} doesn't work
     try {
-      client[module.once ? "once" : "on"](file.split('.')[0], (...args) => module.run(...args, Guild, Game, PREFIX, client)); // Run the event using the client
+      client[module.once ? "once" : "on"](file.split('.')[0], (...args) => {
+      	try {
+		module.run(...args, Guild, Game, PREFIX, client)); // Run the event using the client
+	} catch (error) {
+		console.error(error.stack); // handle error from within the run method itself
+	}
+      }
     } catch (error) {
       console.error(error.stack); // If there is an error, console log the error stack message
     }
