@@ -1,4 +1,4 @@
-const fetch = require('node-fetch'),
+const fetch = require('node-fetch');
   handlePromise = require('../handlePromise.js'),
 module.exports = {
   name: 'deletegame',
