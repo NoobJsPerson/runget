@@ -14,15 +14,11 @@ module.exports = {
     });
     if(!guild) return message.reply("i can't delete a game from a gamelist that's empty");
     const input = decodeURIComponent(args.join(" "));
-    const [res] = await handlePromise(fetch(`https://www.speedrun.com/api/v1/games/${input}`));
-    if(!res) return;
-    let [json] = await handlePromise(res.json());
-    if(!json) return;
+    const res = await fetch(`https://www.speedrun.com/api/v1/games/${input}`);
+    let json = await res.json();
     if (!json.data) {
-      const [ares] = await handlePromise(fetch(`https://www.speedrun.com/api/v1/games?name=${input}`));
-      if(!ares) return;
-      let [ajson] = await handlePromise(ares.json());
-      if(!ajson) return;
+      const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${input}`);
+      let ajson = await ares.json();
       if (!ajson.data) return message.reply('please input a valid name, abbreviation or id');
       if (ajson.data[0]) {
         json.data = ajson.data.find(x => x.names.international == args.join(" "))
