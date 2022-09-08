@@ -77,7 +77,7 @@ fs.readdir('./events/', (err, files) => { // We use the method readdir to read w
     } catch (error) {
       console.error(error.stack); // handle error from within the run method itself
     }
-  }
+  })
     } catch (error) {
   console.error(error.stack); // If there is an error, console log the error stack message
 }
