@@ -73,7 +73,7 @@ fs.readdir('./events/', (err, files) => { // We use the method readdir to read w
     try {
       client[module.once ? "once" : "on"](file.split('.')[0], (...args) => {
         try {
-          module.run(...args, Guild, Game, PREFIX, client)); // Run the event using the client
+          module.run(...args, Guild, Game, PREFIX, client); // Run the event using the client
     } catch (error) {
       console.error(error.stack); // handle error from within the run method itself
     }
