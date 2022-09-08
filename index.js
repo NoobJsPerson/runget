@@ -2,14 +2,13 @@
 require('dotenv').config();
 // import required libraries 
 const fs = require('fs'),
-  {Client, Collection} = require('discord.js'),
-  {TOKEN, PREFIX} = process.env,
+  { Client, Collection } = require('discord.js'),
+  { TOKEN, PREFIX } = process.env,
   Sequelize = require("sequelize"),
   // let sequelise access the database
   sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: 'database.sqlite',
-    logging: false
+    storage: 'database.sqlite'
   }),
   // define the client for our discord bot
   client = new Client({
@@ -20,7 +19,7 @@ const fs = require('fs'),
     }
   }),
   // define the schemas for our tables
-  Guild = sequelize.define("guild",{
+  Guild = sequelize.define("guild", {
     id: {
       type: Sequelize.STRING,
       primaryKey: true,
@@ -33,7 +32,7 @@ const fs = require('fs'),
   }, {
     timestamps: false
   }),
-  Game = sequelize.define("game",{
+  Game = sequelize.define("game", {
     id: {
       type: Sequelize.STRING,
       primaryKey: true,
@@ -43,7 +42,7 @@ const fs = require('fs'),
   }, {
     timestamps: false
   }),
-  GuildGames = sequelize.define("guildGame",{
+  GuildGames = sequelize.define("guildGame", {
     gameId: {
       type: Sequelize.STRING,
       references: {
@@ -61,21 +60,27 @@ const fs = require('fs'),
   }, {
     timestamps: false
   });
-  // makes the tables if they don't exist, does nothing otherwise.
-  Guild.belongsToMany(Game, { through: GuildGames } );
-  Game.belongsToMany(Guild, { through: GuildGames });
-  sequelize.sync();
-  ['cooldowns','events','commands','runs'].forEach(x => client[x] = new Collection());
+// makes the tables if they don't exist, does nothing otherwise.
+Guild.belongsToMany(Game, { through: GuildGames });
+Game.belongsToMany(Guild, { through: GuildGames });
+sequelize.sync();
+['cooldowns', 'events', 'commands', 'runs'].forEach(x => client[x] = new Collection());
 fs.readdir('./events/', (err, files) => { // We use the method readdir to read what is in the events folder
   if (err) return console.error(err); // If there is an error during the process to read all contents of the ./events folder, throw an error in the console
   files.forEach(file => {
     const module = require(`./events/${file}`);
     // Try catch block to throw an error if the code in try{} doesn't work
     try {
-      client[module.once ? "once" : "on"](file.split('.')[0], (...args) => module.run(...args, Guild, Game, PREFIX, client)); // Run the event using the client
+      client[module.once ? "once" : "on"](file.split('.')[0], (...args) => {
+        try {
+          module.run(...args, Guild, Game, PREFIX, client)); // Run the event using the client
     } catch (error) {
-      console.error(error.stack); // If there is an error, console log the error stack message
+      console.error(error.stack); // handle error from within the run method itself
     }
+  }
+    } catch (error) {
+  console.error(error.stack); // If there is an error, console log the error stack message
+}
   });
 });
 
@@ -91,7 +96,7 @@ for (const file of commandFiles) {
   require("express")().all('/', (req, res) => {
     res.json({ working: true });
   });
- 	setInterval(function() {
+    setInterval(function() {
   https.get("https://projectname.username.repl.co", (resp) => {
     let data = "";
     resp.on("data", (chunk) => {

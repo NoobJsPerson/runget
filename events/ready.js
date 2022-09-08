@@ -1,5 +1,5 @@
 const { Collection, MessageEmbed } = require('discord.js'),
-	fs = require('fs'),
+	handlePromise = require('../handlePromise.js'),
 	{ Op } = require("sequelize"),
 	fetch = require('node-fetch');
 module.exports = {
