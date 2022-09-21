@@ -1,17 +1,17 @@
 const { Collection, MessageEmbed } = require('discord.js'),
-	{ Op } = require("sequelize"),
-	fetch = require('node-fetch');
+	fetch = require("node-fetch"),
+	{ Op } = require("sequelize");
 module.exports = {
 	name: 'ready',
 	once: true,
-	async run(Guild, Game, prefix, client) {
-		console.log('bot ready')
+	async run(_, Guild, Game, prefix, client) {
+		console.log(client)
 		client.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
 		let er = new Collection();
 		setInterval(async () => {
 			console.log("a minute passed!")
 			const runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc&max=200').catch();
-			const runsjson = await runs.json();
+			const runsjson = await runs.json().catch();
 			const runsdata = runsjson.data;
 			//fetching newly verified runs
 			runsdata.forEach(run => client.runs.set(run.id, run))

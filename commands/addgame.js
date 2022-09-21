@@ -1,5 +1,4 @@
-const fs = require('fs');
-const fetch = require('node-fetch');
+const getgame = require("../getgame.js");
 module.exports = {
   name: 'addgame',
   aliases: ['ag'],
@@ -7,23 +6,8 @@ module.exports = {
   description: 'adds the game you want to see its runs to the gamelist',
   async execute(message, args, Guild, Game) {
     if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
-    const input = decodeURIComponent(args.join(' '))
-    const errormsg = "please input a valid name, abbreviation or id";
-    const res = await fetch(`https://www.speedrun.com/api/v1/games/${input}`);
-    let json = await res.json();
-    if (!json.data) {
-      const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${input}`);
-      let ajson = await ares.json();
-      if (!ajson.data) return message.reply(errormsg);
-      if (ajson.data[0]) {
-        json.data = ajson.data.find(x => x.names.international == args.join(" "))
-        if (!json.data) return message.reply(errormsg);
-      } else {
-        json = ajson;
-
-        if (!json.data.id) return message.reply(errormsg);
-      }
-    }
+    const input = encodeURIComponent(args.join(" "));
+    const json = await getgame(input, message);
     // const content = await fs.promises.readFile('./storage.json');
     // const storageObject = JSON.parse(content);
     const [game,] = await Game.findOrCreate({

@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const getgame = require('../getgame');
 module.exports = {
   name: 'deletegame',
   aliases: ['dg'],
@@ -13,19 +14,7 @@ module.exports = {
     });
     if(!guild) return message.reply("i can't delete a game from a gamelist that's empty");
     const input = decodeURIComponent(args.join(" "));
-    const res = await fetch(`https://www.speedrun.com/api/v1/games/${input}`);
-    let json = await res.json();
-    if (!json.data) {
-      const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${input}`);
-      let ajson = await ares.json();
-      if (!ajson.data) return message.reply('please input a valid name, abbreviation or id');
-      if (ajson.data[0]) {
-        json.data = ajson.data.find(x => x.names.international == args.join(" "))
-        if (!json.data) return message.reply('please input a valid name, abbreviation or id');
-      } else {
-        json = ajson;
-      }
-    }
+    const json = await getgame(input, message);
     const game = await Game.findOne({
       where: {
         id: json.data.id

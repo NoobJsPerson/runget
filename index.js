@@ -2,7 +2,7 @@
 require('dotenv').config();
 // import required libraries 
 const fs = require('fs'),
-  { Client, Collection } = require('discord.js'),
+  { Client, Collection, Intents } = require('discord.js'),
   { TOKEN, PREFIX } = process.env,
   Sequelize = require("sequelize"),
   // let sequelise access the database
@@ -16,7 +16,8 @@ const fs = require('fs'),
       properties: {
         $browser: 'Discord Android'
       }
-    }
+    },
+    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MESSAGES]
   }),
   // define the schemas for our tables
   Guild = sequelize.define("guild", {
@@ -60,6 +61,7 @@ const fs = require('fs'),
   }, {
     timestamps: false
   });
+  console.log(client);
 // makes the tables if they don't exist, does nothing otherwise.
 Guild.belongsToMany(Game, { through: GuildGames });
 Game.belongsToMany(Guild, { through: GuildGames });
@@ -74,13 +76,13 @@ fs.readdir('./events/', (err, files) => { // We use the method readdir to read w
       client[module.once ? "once" : "on"](file.split('.')[0], (...args) => {
         try {
           module.run(...args, Guild, Game, PREFIX, client); // Run the event using the client
+        } catch (error) {
+          console.error(error.stack); // handle error from within the run method itself
+        }
+      })
     } catch (error) {
-      console.error(error.stack); // handle error from within the run method itself
+      console.error(error.stack); // If there is an error, console log the error stack message
     }
-  })
-    } catch (error) {
-  console.error(error.stack); // If there is an error, console log the error stack message
-}
   });
 });
 

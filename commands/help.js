@@ -23,13 +23,13 @@ module.exports = {
 
         .setDescription(cmds)
         
-        .setFooter('Made by AmineCrafter101#5531')
+        .setFooter({text: 'Made by AmineCrafter101#5531'})
         
         .setTimestamp()
 
         .setColor("RANDOM");
 
-      await message.channel.send(Embed);
+      await message.channel.send({embeds: [Embed]});
     } else {
       const data = [];
       const { commands } = client;

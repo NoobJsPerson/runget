@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const getgame = require('../getgame');
 module.exports = {
   name: 'deletegames',
   aliases: ['ags'],
@@ -18,27 +19,7 @@ module.exports = {
 
     for (let x of argz) {
       x = x.trim();
-      const errormsg = `are you sure https://www.speedrun.com/${x} exists\n||if it didn't work try deleting unnecessary spaces||`;
-      const res = await fetch(`https://www.speedrun.com/api/v1/games/${x}`);
-      let json = await res.json();
-      if (!json.data) {
-
-        const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${x}`);
-        let ajson = await ares.json();
-        if (!ajson.data) {
-          message.reply(errormsg)
-          continue;
-        }
-        if (ajson.data[0]) {
-          json.data = ajson.data.find(y => y.names.international == x.replace('%20', ' '));
-          if (!json.data) {
-            message.reply(errormsg);
-            continue;
-          }
-        } else {
-          json = ajson;
-        }
-      }
+      const json = await getgame(x, message);
       const game = await Game.findOne({
         where: {
           id: json.data.id

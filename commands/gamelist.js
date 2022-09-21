@@ -29,11 +29,11 @@ module.exports = {
 
     lists.forEach(x => {
       message.channel.send({
-        embed: {
+        embeds: [{
           title: `${message.guild ? message.guild.name : message.author.username}'s gamelist`,
           color: 'RANDOM',
           description: '•' + x.join('\n•')
-        }
+        }]
       });
     });
   }
