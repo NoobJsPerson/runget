@@ -1,4 +1,3 @@
-const fetch = require("node-fetch");
 module.exports = async (input, message) => {
     const errormsg = "please input a valid name, abbreviation or id";
     const res = await fetch(`https://www.speedrun.com/api/v1/games/${input}`);

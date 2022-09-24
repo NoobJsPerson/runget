@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const getgame = require('../getgame');
 module.exports = {
   name: 'deletegame',
