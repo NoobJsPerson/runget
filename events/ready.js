@@ -123,8 +123,8 @@ module.exports = {
 					  if (!guilds.length) return
 					for (let guild of guilds) {
 						console.log("sent run")
-						if (guild.isUser) client.users.cache.get(guild.id).send(embed);
-						else client.channels.cache.get(guild.channel).send(embed)
+						if (guild.isUser) client.users.cache.get(guild.id).send({embeds: [embed]});
+						else client.channels.cache.get(guild.channel).send({embeds: [embed]})
 					}
 					// client.guilds.cache.forEach(g => {
 					// 	const dbgame = storageObject[g.id];
