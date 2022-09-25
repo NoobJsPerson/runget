@@ -97,7 +97,7 @@ module.exports = {
 							},
 							{
 								name:'Place in leaderboards', 
-								value: top || 'N/A', 
+								value: `${top}`, 
 								inline: true
 							})
 						.setThumbnail(cover);
