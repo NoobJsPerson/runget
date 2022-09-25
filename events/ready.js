@@ -84,6 +84,7 @@ module.exports = {
 					const topobj = leaderjson.data.runs.find(rundata => rundata.run.id == newrun.id);
 					if (topobj) top = topobj.place;
 					// fetching place in leaderboards
+					console.log("top is: ",top)
 					const embed = new MessageEmbed()
 						.setTitle(`${game}:${level} ${category} ${subcategoryName}`)
 						.setColor('RANDOM')
@@ -96,7 +97,7 @@ module.exports = {
 							},
 							{
 								name:'Place in leaderboards', 
-								value: top ?? 'N/A', 
+								value: top || 'N/A', 
 								inline: true
 							})
 						.setThumbnail(cover);
