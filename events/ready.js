@@ -89,9 +89,17 @@ module.exports = {
 						.setColor('RANDOM')
 						.setDescription(`**${newrun.times.primary.replace('PT', '').replace('H', ' hours ').replace('M', ' minutes ').replace('S', ' seconds')} by ${user}**`)
 						.setURL(newrun.weblink)
-						.addField('Verified at:', '`' + newrun.status['verify-date'].replace('T', ' ').replace('Z', '') + '`', true)
-						.setThumbnail(cover)
-						.addField('Place in leaderboards', top, true);
+						.addFields({
+								name:'Verified at:', 
+								value: '`' + newrun.status['verify-date'].replace('T', ' ').replace('Z', '') + '`', 
+								inline:true
+							},
+							{
+								name:'Place in leaderboards', 
+								value: top ?? 'N/A', 
+								inline: true
+							})
+						.setThumbnail(cover);
 					console.log("made embed!")
 					// constructing the run embed
 					const guilds = await Guild.findAll({
