@@ -100,7 +100,8 @@ module.exports = {
 								inline: true
 							})
 						.setThumbnail(cover);
-					console.log("made embed!")
+					console.log("made embed!");
+					console.log(embed);
 					// constructing the run embed
 					const guilds = await Guild.findAll({
 						include: {
@@ -121,7 +122,6 @@ module.exports = {
 					  });
 					  if (!guilds.length) return
 					for (let guild of guilds) {
-						console.log("sent run")
 						if (guild.isUser) client.users.cache.get(guild.id).send({embeds: [embed]});
 						else client.channels.cache.get(guild.channel).send({embeds: [embed]})
 					}
@@ -142,6 +142,6 @@ module.exports = {
 			er = er.filter(x => client.runs.has(x.id));
 			// deleting unnecessary old runs
 		}, 40000);
-		// using setInterval to repeat the process every minute
+		// using setInterval to repeat the process every four minute
 	}
 }
