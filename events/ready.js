@@ -1,4 +1,5 @@
 const { Collection, MessageEmbed } = require('discord.js'),
+	attempt = require('../attempt.js'),
 	{ Op } = require("sequelize");
 module.exports = {
 	name: 'ready',
@@ -78,8 +79,8 @@ module.exports = {
 						lvlid = lvljson.data.id
 						// fetching level data if found
 					}
-					const leaderres = await fetch(`https://speedrun.com/api/v1/leaderboards/${newrun.game}/${level ? `level/${lvlid}` : 'category'}/${categoryjson.data.id}${subcategoryQuery}`);
-					const leaderjson = await leaderres.json();
+					const leaderres = await attempt(fetch,`https://speedrun.com/api/v1/leaderboards/${newrun.game}/${level ? `level/${lvlid}` : 'category'}/${categoryjson.data.id}${subcategoryQuery}`);
+					const leaderjson = await attempt(leaderres.json.bind(leaderres));
 					const topobj = leaderjson.data.runs.find(rundata => rundata.run.id == newrun.id);
 					if (topobj) top = topobj.place;
 					// fetching place in leaderboards
