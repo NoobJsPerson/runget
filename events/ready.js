@@ -4,8 +4,7 @@ const { Collection, MessageEmbed } = require('discord.js'),
 module.exports = {
 	name: 'ready',
 	once: true,
-	async run(_, Guild, Game, prefix, client) {
-		console.log(client)
+	async run(client, Guild, Game, _prefix) {
 		client.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
 		let er = new Collection();
 		setInterval(async () => {
@@ -79,12 +78,12 @@ module.exports = {
 						lvlid = lvljson.data.id
 						// fetching level data if found
 					}
-					const leaderres = await attempt(fetch,`https://speedrun.com/api/v1/leaderboards/${newrun.game}/${level ? `level/${lvlid}` : 'category'}/${categoryjson.data.id}${subcategoryQuery}`);
-					const leaderjson = await attempt(leaderres.json.bind(leaderres));
-					const topobj = leaderjson.data.runs.find(rundata => rundata.run.id == newrun.id);
+					const leaderres = await attempt(fetch,`https://speedrun.com/api/v1/leaderboards/${newrun.game}/${level ? `level/${lvlid}` : 'category'}/${categoryjson.data.id}${subcategoryQuery}`).catch();
+					const leadertext = await leaderres.text();
+					const leaderjson = await attempt(JSON.parse,leadertext);
+					const topobj = leaderjson?.data.runs.find(rundata => rundata.run.id == newrun.id);
 					if (topobj) top = topobj.place;
 					// fetching place in leaderboards
-					console.log("top is: ",top)
 					const embed = new MessageEmbed()
 						.setTitle(`${game}:${level} ${category} ${subcategoryName}`)
 						.setColor('RANDOM')

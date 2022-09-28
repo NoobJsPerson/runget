@@ -8,7 +8,8 @@ const fs = require('fs'),
   // let sequelise access the database
   sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: 'database.sqlite'
+    storage: 'database.sqlite',
+    logging: false
   }),
   // define the client for our discord bot
   client = new Client({
@@ -61,7 +62,6 @@ const fs = require('fs'),
   }, {
     timestamps: false
   });
-  console.log(client);
 // makes the tables if they don't exist, does nothing otherwise.
 Guild.belongsToMany(Game, { through: GuildGames });
 Game.belongsToMany(Guild, { through: GuildGames });
