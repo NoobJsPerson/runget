@@ -1,4 +1,3 @@
-const fs = require('fs');
 module.exports = {
 	async run(guild, Guild) {
 		const leavingGuild = await Guild.findOne({
