@@ -68,7 +68,7 @@ global.fetch = fetch;
 Guild.belongsToMany(Game, { through: GuildGames });
 Game.belongsToMany(Guild, { through: GuildGames });
 sequelize.sync();
-setGlobalDispatcher(new Agent({ connect: { timeout: 60_000 } }))
+setGlobalDispatcher(new Agent({ connect: { timeout: 60_000 } }));
 ['cooldowns', 'events', 'commands', 'runs'].forEach(x => client[x] = new Collection());
 fs.readdir('./events/', (err, files) => { // We use the method readdir to read what is in the events folder
   if (err) return console.error(err); // If there is an error during the process to read all contents of the ./events folder, throw an error in the console
