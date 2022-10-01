@@ -4,7 +4,8 @@ const { Collection, MessageEmbed } = require('discord.js'),
 module.exports = {
 	name: 'ready',
 	once: true,
-	async run(client, Guild, Game, _prefix) {
+	async run(client, Guild, Game) {
+		console.log('bot ready!!!');
 		client.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
 		let er = new Collection();
 		setInterval(async () => {
@@ -78,9 +79,9 @@ module.exports = {
 						lvlid = lvljson.data.id
 						// fetching level data if found
 					}
-					const leaderres = await attempt(fetch,`https://speedrun.com/api/v1/leaderboards/${newrun.game}/${level ? `level/${lvlid}` : 'category'}/${categoryjson.data.id}${subcategoryQuery}`).catch();
+					const leaderres = await attempt(fetch, `https://speedrun.com/api/v1/leaderboards/${newrun.game}/${level ? `level/${lvlid}` : 'category'}/${categoryjson.data.id}${subcategoryQuery}`).catch();
 					const leadertext = await leaderres.text();
-					const leaderjson = await attempt(JSON.parse,leadertext);
+					const leaderjson = await attempt(JSON.parse, leadertext);
 					const topobj = leaderjson?.data.runs.find(rundata => rundata.run.id == newrun.id);
 					if (topobj) top = topobj.place;
 					// fetching place in leaderboards
@@ -90,13 +91,13 @@ module.exports = {
 						.setDescription(`**${newrun.times.primary.replace('PT', '').replace('H', ' hours ').replace('M', ' minutes ').replace('S', ' seconds')} by ${user}**`)
 						.setURL(newrun.weblink)
 						.addFields({
-								name:'Verified at:', 
-								value: '`' + newrun.status['verify-date'].replace('T', ' ').replace('Z', '') + '`', 
-								inline:true
-							},
+							name: 'Verified at:',
+							value: '`' + newrun.status['verify-date'].replace('T', ' ').replace('Z', '') + '`',
+							inline: true
+						},
 							{
-								name:'Place in leaderboards', 
-								value: `${top}`, 
+								name: 'Place in leaderboards',
+								value: `${top}`,
 								inline: true
 							})
 						.setThumbnail(cover);
@@ -105,25 +106,25 @@ module.exports = {
 					// constructing the run embed
 					const guilds = await Guild.findAll({
 						include: {
-						  model: Game,
-						  where: {
-							id: newrun.game
-						  }
+							model: Game,
+							where: {
+								id: newrun.game
+							}
 						},
 						where: {
 							[Op.or]: [{
 								channel: {
 									[Op.not]: null
 								}
-							},{
+							}, {
 								isUser: true
 							}]
 						}
-					  });
-					  if (!guilds.length) return
+					});
+					if (!guilds.length) return
 					for (let guild of guilds) {
-						if (guild.isUser) client.users.cache.get(guild.id).send({embeds: [embed]});
-						else client.channels.cache.get(guild.channel).send({embeds: [embed]})
+						if (guild.isUser) client.users.cache.get(guild.id).send({ embeds: [embed] });
+						else client.channels.cache.get(guild.channel).send({ embeds: [embed] })
 					}
 					// client.guilds.cache.forEach(g => {
 					// 	const dbgame = storageObject[g.id];
