@@ -1,4 +1,3 @@
-const fs = require("fs");
 module.exports ={
   name:"setchannel",
   description: "sets the channel where runs should be sent (you should run this command when theres no channel called #new-runs)",

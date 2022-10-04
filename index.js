@@ -1,5 +1,9 @@
 // initialise .env config. replit users don't need this
 require('dotenv').config();
+// run the debug file to add helpful properties
+require("./debug.js")
+// check if it actually works
+console.log(__line);
 // import required libraries 
 const fs = require('fs'),
   { Agent, setGlobalDispatcher, fetch } = require("undici"),
