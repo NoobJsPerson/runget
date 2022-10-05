@@ -21,7 +21,7 @@ module.exports = {
 		for (let x of argz) {
 			x = x.trim();
 			let json = await getgame(x, message);
-			if(!json) return message.reply(`An issue occured while requesting data about ${decodeURIComponent(x)}. Try again later`);
+			if(!json) continue;
 			const [game,] = await Game.findOrCreate({
 				where: {
 				  id: json.data.id

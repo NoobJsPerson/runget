@@ -14,7 +14,7 @@ module.exports = {
     if(!guild) return message.reply("i can't delete a game from a gamelist that's empty");
     const input = decodeURIComponent(args.join(" "));
     const json = await getgame(input, message);
-    if(!json) return message.reply(`An issue occured while requesting data about ${args.join()} . Try again later`);
+    if(!json) return;
     const game = await Game.findOne({
       where: {
         id: json.data.id
