@@ -6,9 +6,8 @@ module.exports = {
   description: 'deletes the games (seperated by "|") you don\'t want to see their runs to the gamelist',
   async execute(message, args, Guild, Game) {
     if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
-    let argz = args.join(' ').split('|'),
+    let argz = args.join(' ').split('|').map(encodeURIComponent),
       games = [];
-    argz = argz.map(x => encodeURIComponent(x));
     const guild = await Guild.findOne({
       where: {
         id: message.guild ? message.guild.id : message.author.id
@@ -19,6 +18,7 @@ module.exports = {
     for (let x of argz) {
       x = x.trim();
       const json = await getgame(x, message);
+			if(!json) return message.reply(`An issue occured while requesting data about ${decodeURIComponent(x)}. Try again later`);
       const game = await Game.findOne({
         where: {
           id: json.data.id

@@ -23,5 +23,4 @@ module.exports = async (input, message) => {
                 return;
             }
         }
-    
 }

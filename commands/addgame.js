@@ -8,6 +8,7 @@ module.exports = {
     if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
     const input = encodeURIComponent(args.join(" "));
     const json = await getgame(input, message);
+    if(!json) return message.reply(`An issue occured while requesting data about ${args.join()} . Try again later`);
     const [game,] = await Game.findOrCreate({
       where: {
         id: json.data.id

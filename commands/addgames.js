@@ -6,8 +6,7 @@ module.exports = {
 	description: 'adds the games (seperated by "|") you want to see their runs to the gamelist',
 	async execute(message, args, Guild, Game) {
 		if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
-		let argz = args.join(' ').split('|');
-		argz = argz.map(x => encodeURIComponent(x));
+		let argz = args.join(' ').split('|').map(encodeURIComponent);
 		const channel = message.guild && message.guild.channels.cache.find(x => x.name == "new-runs");
 		const [guild, created] = await Guild.findOrCreate({
 			where: {
@@ -22,6 +21,7 @@ module.exports = {
 		for (let x of argz) {
 			x = x.trim();
 			let json = await getgame(x, message);
+			if(!json) return message.reply(`An issue occured while requesting data about ${decodeURIComponent(x)}. Try again later`);
 			const [game,] = await Game.findOrCreate({
 				where: {
 				  id: json.data.id
