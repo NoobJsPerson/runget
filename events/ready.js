@@ -11,7 +11,7 @@ module.exports = {
 		setInterval(async () => {
 			console.log("cycle started!")
 			const runs = await fetch('https://www.speedrun.com/api/v1/runs?status=verified&orderby=verify-date&direction=desc&max=200').catch(console.error);
-			if(!runs) return;
+			if (!runs) return;
 			const runsjson = await runs.json().catch();
 			const runsdata = runsjson.data;
 			//fetching newly verified runs
@@ -38,17 +38,13 @@ module.exports = {
 					let level = '',
 						lvlid, top = 'N/A',
 						game, cover, user = '';
-					// const guildarr = Object.entries(storageObject).find(x => x[1].find(y => y.id == newrun.game));
 					const gameObj = games.find(x => x.id == newrun.game);
-					// guildid = guildarr[0];
-					// index = guildarr[1].findIndex(x => x.id == newrun.game);
-					// cache = guildarr[1][index];
 					game = gameObj.name;
 					cover = gameObj.url;
 					console.log(__line);
 					for (let player of newrun.players) {
 						const userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`).catch(console.error);
-						if(!userres) continue;
+						if (!userres) continue;
 						const userjson = await userres.json();
 						const i = newrun.players.findIndex(x => x.id == player.id)
 						user += (user ? i == newruns.players?.length - 1 ? ' and ' : ', ' : '') + userjson.data.names.international
@@ -56,14 +52,13 @@ module.exports = {
 					}
 					// fetching user data
 					const categoryres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}`).catch(console.error);
-					if(!categoryres) return;
+					if (!categoryres) return;
 					const categoryjson = await categoryres.json();
 					const category = categoryjson.data.name;
 					// fetching category data
 					const variablesres = await fetch(`https://speedrun.com/api/v1/categories/${newrun.category}/variables`).catch(console.error);
-					if(!variablesres) return;
+					if (!variablesres) return;
 					const variablesjson = await variablesres.json();
-
 					const runVariables = Object.entries(newrun.values);
 					let subcategoryName = '',
 						subcategoryQuery = '';
@@ -78,14 +73,14 @@ module.exports = {
 					// fetching subcategory data if found
 					if (newrun.level) {
 						const lvlres = await fetch(`https://speedrun.com/api/v1/levels/${newrun.level}`).catch(console.error);
-						if(!lvlres) return;
+						if (!lvlres) return;
 						const lvljson = await lvlres.json();
 						level = lvljson.data.name
 						lvlid = lvljson.data.id
 						// fetching level data if found
 					}
 					const leaderres = await fetch(`https://speedrun.com/api/v1/leaderboards/${newrun.game}/${level ? `level/${lvlid}` : 'category'}/${categoryjson.data.id}${subcategoryQuery}`).catch(console.error);
-					if(!leaderres) return;
+					if (!leaderres) return;
 					const leadertext = await leaderres.text();
 					const leaderjson = await attempt(JSON.parse, leadertext);
 					const topobj = leaderjson?.data.runs.find(rundata => rundata.run.id == newrun.id);
