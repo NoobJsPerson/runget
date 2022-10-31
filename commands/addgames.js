@@ -1,46 +1,51 @@
-const getgame = require('../getgame');
+const getgame = require('../getgame'),
+	{ SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
-	name: 'addgames',
-	aliases: ['ags'],
-	usage: '<website-name|id>',
-	description: 'adds the games (seperated by "|") you want to see their runs to the gamelist',
-	async execute(message, args, Guild, Game) {
-		if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
-		let argz = args.join(' ').split('|').map(encodeURIComponent);
-		const channel = message.guild && message.guild.channels.cache.find(x => x.name == "new-runs");
+	data: new SlashCommandBuilder().setName('addgames')
+		.setDescription('adds the games (seperated by "|") you want to see their runs to the gamelist')
+		.addStringOption(option =>
+			option.setName('game_names')
+				.setDescription('game names that you wanna add (seperated by "|")')
+				.setRequired(true)),
+	async execute(interaction, Guild, Game) {
+		await interaction.deferReply()
+		if (interaction.guild && !interaction.member.permissions.has("MANAGE_MESSAGES")) return interaction.editReply('only staff can change game');
+		let argz = interaction.options.getString('game_names', true).split('|').map(encodeURIComponent);
+		const channel = interaction.guild && interaction.guild.channels.cache.find(x => x.name == "new-runs");
 		const [guild, created] = await Guild.findOrCreate({
 			where: {
-			  id: message.guild ? message.guild.id : message.author.id
+				id: interaction.guild ? interaction.guild.id : interaction.user.id
 			},
 			defaults: {
-			  channel: channel && channel.id || null,
-			  isUser: !message.guild
+				channel: channel && channel.id || null,
+				isUser: !interaction.guild
 			}
 		});
 		let games = [];
 		for (let x of argz) {
 			x = x.trim();
-			let json = await getgame(x, message);
-			if(!json) continue;
+			let json = await getgame(x, interaction);
+			if (!json) continue;
 			const [game,] = await Game.findOrCreate({
 				where: {
-				  id: json.data.id
+					id: json.data.id
 				},
 				defaults: {
-				  name: json.data.names.international,
-				  url: json.data.assets['cover-large'].uri
+					name: json.data.names.international,
+					url: json.data.assets['cover-large'].uri
 				}
-			  }),
-			  isGameInGuild = !created && await guild.hasGame(game);
-			  if (isGameInGuild) {
-				message.reply('i can\'t add a game thats already in the list');
+			}),
+				isGameInGuild = !created && await guild.hasGame(game);
+			if (isGameInGuild) {
+				interaction.channel.send('i can\'t add a game thats already in the list');
 				continue;
-			  }
+			}
 			games.push(game)
-			message.channel.send(`the game ${json.data.names.international} has been successfully added to the runlist`);
+			interaction.channel.send(`the game ${json.data.names.international} has been successfully added to the runlist`);
 
 		}
 		await guild.addGames(games);
+		await interaction.editReply('Done!')
 
 
 	}

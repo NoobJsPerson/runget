@@ -5,6 +5,10 @@ module.exports = {
 				id: guild.id
 			}
 		});
-		if(leavingGuild) await leavingGuild.destroy();
+		if(!leavingGuild) return;
+		for (let game of (await leavingGuild.getGames())){
+			if((await game.getGuilds()).length === 1) await game.destroy();
+		}
+		await leavingGuild.destroy();
 	}
 }

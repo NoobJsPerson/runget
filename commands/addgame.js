@@ -1,41 +1,40 @@
-const getgame = require("../getgame.js");
+const getgame = require("../getgame.js"),
+	{ SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
-  name: 'addgame',
-  aliases: ['ag'],
-  usage: '<website-name|id>',
-  description: 'adds the game you want to see its runs to the gamelist',
-  async execute(message, args, Guild, Game) {
-    if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
-    const input = encodeURIComponent(args.join(" "));
-    const json = await getgame(input, message);
-    if(!json) return;
-    const [game,] = await Game.findOrCreate({
-      where: {
-        id: json.data.id
-      },
-      defaults: {
-        name: json.data.names.international,
-        url: json.data.assets['cover-large'].uri
-      }
-    }),
-    channel = message.guild && message.guild.channels.cache.find(x => x.name == "new-runs"),
-    [guild, created] = await Guild.findOrCreate({
-        where: {
-          id: message.guild ? message.guild.id : message.author.id
-        },
-        defaults: {
-          channel: channel && channel.id || null,
-          isUser: !message.guild
-        }
-    }),
-    isGameInGuild = !created && await guild.hasGame(game);
-    if (isGameInGuild) return message.reply('i can\'t add a game thats already in the list');
-    await guild.addGame(game);
-    // if (storageObject[objtype] instanceof Array) {
-    //   storageObject[objtype].push(obj);
-    // } else {
-    //   storageObject[objtype] = [obj];
-    // }
-    message.channel.send(`the game ${json.data.names.international} has been successfully added to the runlist`);
-  }
+	data: new SlashCommandBuilder().setName('addgame')
+		.setDescription("adds the game you want to see its runs to the gamelist")
+		.addStringOption(option =>
+			option.setName('game_name')
+				.setDescription('The game you want to add')
+				.setRequired(true)),
+	async execute(interaction, Guild, Game) {
+		if (interaction.guild && !interaction.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only	staff	can	change	game');
+		const input = encodeURIComponent(interaction.options.getString('game_name', true));
+		console.log(input)
+		const json = await getgame(input, interaction);
+		if (!json) return;
+		const [game,] = await Game.findOrCreate({
+			where: {
+				id: json.data.id
+			},
+			defaults: {
+				name: json.data.names.international,
+				url: json.data.assets['cover-large'].uri
+			}
+		}),
+			channel = interaction?.guild.channels.cache.find(x => x.name == "new-runs"),
+			[guild, created] = await Guild.findOrCreate({
+				where: {
+					id: interaction.guild ? interaction.guild.id : interaction.user.id
+				},
+				defaults: {
+					channel: channel && channel.id || null,
+					isUser: !interaction.guild
+				}
+			}),
+			isGameInGuild = !created && await guild.hasGame(game);
+		if (isGameInGuild) return interaction.reply('i can\'t add a game thats already in the list');
+		await guild.addGame(game);
+		interaction.reply(`the game ${json.data.names.international} has been successfully added to the runlist`);
+	}
 };

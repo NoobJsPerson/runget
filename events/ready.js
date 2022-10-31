@@ -6,7 +6,7 @@ module.exports = {
 	once: true,
 	async run(client, Guild, Game) {
 		console.log('bot ready!');
-		client.user.setActivity('SpeedrunsLive', { type: 'COMPETING' });
+		client.user.setActivity('SpeedrunsLive', { type: 'PLAYING' });
 		let er = new Collection();
 		setInterval(async () => {
 			console.log("cycle started!")

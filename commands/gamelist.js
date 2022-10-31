@@ -1,7 +1,8 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
-  name: 'gamelist',
-  description: 'displays the list of games that its runs will be sent',
-  async execute(message, _args, Guild, _Game, prefix) {
+	data: new SlashCommandBuilder().setName('gamelist')
+		.setDescription('displays the list of games that its runs will be sent'),
+  async execute(interaction, Guild, _Game) {
     function underify(array) {
       if (`•${array.join('\n•')}`.length <= 2048) return [array];
       let total = [], secondarray = [];
@@ -18,23 +19,24 @@ module.exports = {
     }
     const guild = await Guild.findOne({
       where: {
-        id: message.guild ? message.guild.id : message.author.id
+        id: interaction.guild ? interaction.guild.id : interaction.user.id
       }
     });
-    if(!guild) return message.reply(`the gamelist is currently empty add games to it using ${prefix}addgame`);
+    if(!guild) return interaction.reply(`the gamelist is currently empty add games to it using /addgame`);
     const list = await guild.getGames();
-    if (!list.length) return message.reply(`the gamelist is currently empty add games to it using ${prefix}addgame`);
+    if (!list.length) return interaction.reply(`the gamelist is currently empty add games to it using /addgame`);
     const sorted = list.map(x => x.name).sort(),
       lists = underify(sorted);
 
     lists.forEach(x => {
-      message.channel.send({
+      interaction.channel.send({
         embeds: [{
-          title: `${message.guild ? message.guild.name : message.author.username}'s gamelist`,
+          title: `${interaction.guild ? interaction.guild.name : interaction.author.username}'s gamelist`,
           color: 'RANDOM',
           description: '•' + x.join('\n•')
         }]
       });
     });
+	await interaction.reply('\u200B');
   }
 };

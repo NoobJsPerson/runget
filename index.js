@@ -2,9 +2,9 @@
 require('dotenv').config();
 // import required libraries 
 const fs = require('fs'),
-  { Agent, setGlobalDispatcher, fetch } = require("undici"),
+  fetch = require("node-fetch"),
   { Client, Collection, Intents } = require('discord.js'),
-  { TOKEN, PREFIX } = process.env,
+  { TOKEN } = process.env,
   Sequelize = require("sequelize"),
   // let sequelise access the database
   sequelize = new Sequelize({
@@ -68,7 +68,7 @@ global.fetch = fetch;
 Guild.belongsToMany(Game, { through: GuildGames });
 Game.belongsToMany(Guild, { through: GuildGames });
 sequelize.sync();
-setGlobalDispatcher(new Agent({ connect: { timeout: 60_000 } }));
+// setGlobalDispatcher(new Agent({ connect: { timeout: 60_000 } }));
 ['cooldowns', 'events', 'commands', 'runs'].forEach(x => client[x] = new Collection());
 fs.readdir('./events/', (err, files) => { // We use the method readdir to read what is in the events folder
   if (err) return console.error(err); // If there is an error during the process to read all contents of the ./events folder, throw an error in the console
@@ -78,7 +78,7 @@ fs.readdir('./events/', (err, files) => { // We use the method readdir to read w
     try {
       client[module.once ? "once" : "on"](file.split('.')[0], (...args) => {
         try {
-          module.run(...args, Guild, Game, PREFIX, client); // Run the event using the client
+          module.run(...args, Guild, Game); // Run the event using the client
         } catch (error) {
           console.error(error.stack); // handle error from within the run method itself
         }
@@ -93,7 +93,8 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
-  client.commands.set(command.name, command);
+  if(!command.data) continue;
+  client.commands.set(command.data.name, command);
 }
 // for replit users, uncomment this!
 /*
@@ -113,7 +114,7 @@ for (const file of commandFiles) {
   }).on("error", (err) => {
     console.log("Error: " + err.message);
   });
-},17e5);
+},16e5);
 server.listen(3000, () => console.log("Server is Ready!"));
 */
 // connect to the bot using our token
