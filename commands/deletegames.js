@@ -1,57 +1,49 @@
-const fs = require ('fs');
-const fetch = require('node-fetch');
+const getgame = require('../getgame'),
+	{ SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
-  name:'deletegames',
-  aliases:['ags'],
-  usage:'<website-name|id>',
-  description:'deletes the games you don\'t want to see their runs to the gamelist',
-  async execute(message,args){
-    if(message.guild&&!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
-    let argz = args.join(' ').split('|');
-    argz = argz.map(x => x.replace(' ','%20'));
-    const content = await fs.promises.readFile('./storage.json');
-const storageObject = JSON.parse(content);
-const objtype = message.guild?message.guild.id:message.author.id
+	data: new SlashCommandBuilder().setName('deletegames')
+		.setDescription('deletes the games (seperated by "|") you don\'t want to see their runs to the gamelist')
+		.addStringOption(option =>
+			option.setName('game_names')
+				.setDescription('games name that you wanna delete (seperated by "|")')
+				.setRequired(true)),
+	async execute(interaction, Guild, Game) {
+		await interaction.deferReply();
+		if (interaction.guild && !interaction.member.permissions.has("MANAGE_MESSAGES")) return interaction.editReply('only staff can change game');
+		let argz = interaction.options.getString('game_names').split('|').map(encodeURIComponent),
+			games = [];
+		const guild = await Guild.findOne({
+			where: {
+				id: interaction.guild ? interaction.guild.id : interaction.user.id
+			}
+		});
+		if (!guild) return interaction.channel.send("i can't delete a game from a gamelist that's empty");
 
-    for(const x of argz){
-	x = x.trim();
-    const errormsg = `are you sure https://www.speedrun.com/${x} exists
-||if it didn't work try deleting unnecessary spaces||`;
-      const res = await fetch(`https://www.speedrun.com/api/v1/games/${x}`);
-     let json = await res.json();
-    if(!json.data){
-          
-      const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${x}`);
-    let ajson = await ares.json();
-    if(!ajson.data){
-message.reply(errormsg)
-continue;
-}
-    if(ajson.data[0]){
-      json.data = ajson.data.find(y => y.names.international == x.replace('%20',' '));
-      if(!json.data){
-message.reply(errormsg);
-continue;
-}
-    } else {
-      json = ajson;
-    }
-        } 
-const list = storageObject[objtype];
+		for (let x of argz) {
+			x = x.trim();
+			const json = await getgame(x, interaction);
+			if (!json) continue;
+			const game = await Game.findOne({
+				where: {
+					id: json.data.id
+				}
+			});
 
-    if(!list){
-message.reply('i can\'t delete a game from a list thats empty');
-continue;
-}
-    if(!list.find(y => y.id == json.data.id)){
-message.reply('i can\'t delete a game thats not in the list');
-continue;
-}
-    storageObject[objtype] = list.filter(y => y.id != json.data.id)
-   
- message.channel.send(`the game ${json.data.names.international} got successfully deleted`);
-    }
-    await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
-
-   }
+			if (!game) {
+				interaction.channel.send('i can\'t delete a game that never got added');
+				continue;
+			}
+			const isGameInGuild = guild.hasGame(game);
+			if (!isGameInGuild) {
+				interaction.channel.send('i can\'t delete a game thats not in the list');
+				continue;
+			}
+			const gameGuilds = await game.getGuilds();
+			if (gameGuilds.length === 1) await game.destroy();
+			else games.push(game)
+			interaction.channel.send(`the game ${json.data.names.international} got successfully deleted`);
+		}
+		if (games.length) await guild.removeGames(games);
+		await interaction.editReply('Done!')
+	}
 };

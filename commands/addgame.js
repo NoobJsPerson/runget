@@ -1,45 +1,40 @@
-const fs = require ('fs');
-const fetch = require('node-fetch');
+const getgame = require("../getgame.js"),
+	{ SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
-  name:'addgame',
-  aliases:['ag'],
-  usage:'<website-name|id>',
-  description:'adds the game you want to see its runs to the gamelist',
-  async execute(message,args){
-    if(message.guild&&!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
-    const input = args.join('%20')
-    const errormsg = "please input a valid name, abbreviation or id";
-      const res = await fetch(`https://www.speedrun.com/api/v1/games/${input}`);
-    let json = await res.json();
-    if(!json.data){
-          
-      const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${input}`);
-    let ajson = await ares.json();
-    if(!ajson.data) return message.reply(errormsg);
-    if(ajson.data[0]){
-      json.data = ajson.data.find(x => x.names.international == args.join(" "))
-      if(!json.data) return message.reply(errormsg);
-    } else {
-      json = ajson;
-
-     if(!json.data.id) return message.reply(errormsg);
-    }
-        } 
-        const content = await fs.promises.readFile('./storage.json');
-const storageObject = JSON.parse(content);
-let objtype = message.guild?message.guild.id:message.author.id;
-
-const obj = { id : json.data.id, name : json.data.names.international, url:json.data.assets['cover-large'].uri};
-const serverObject = storageObject[objtype];
-
-        if(serverObject && serverObject.find(x => x.id == json.data.id)) return message.reply('i can\'t add a game thats already in the list');
-
-    if (storageObject[objtype] instanceof Array) {
-  storageObject[objtype].push(obj);
-} else {
-  storageObject[objtype] = [ obj ];
-}
-await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
-    message.channel.send(`the game ${json.data.names.international} has been successfully added to the runlist`);
-  }
+	data: new SlashCommandBuilder().setName('addgame')
+		.setDescription("adds the game you want to see its runs to the gamelist")
+		.addStringOption(option =>
+			option.setName('game_name')
+				.setDescription('The game you want to add')
+				.setRequired(true)),
+	async execute(interaction, Guild, Game) {
+		if (interaction.guild && !interaction.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only	staff	can	change	game');
+		const input = encodeURIComponent(interaction.options.getString('game_name', true));
+		console.log(input)
+		const json = await getgame(input, interaction);
+		if (!json) return;
+		const [game,] = await Game.findOrCreate({
+			where: {
+				id: json.data.id
+			},
+			defaults: {
+				name: json.data.names.international,
+				url: json.data.assets['cover-large'].uri
+			}
+		}),
+			channel = interaction?.guild.channels.cache.find(x => x.name == "new-runs"),
+			[guild, created] = await Guild.findOrCreate({
+				where: {
+					id: interaction.guild ? interaction.guild.id : interaction.user.id
+				},
+				defaults: {
+					channel: channel && channel.id || null,
+					isUser: !interaction.guild
+				}
+			}),
+			isGameInGuild = !created && await guild.hasGame(game);
+		if (isGameInGuild) return interaction.reply('i can\'t add a game thats already in the list');
+		await guild.addGame(game);
+		interaction.reply(`the game ${json.data.names.international} has been successfully added to the runlist`);
+	}
 };

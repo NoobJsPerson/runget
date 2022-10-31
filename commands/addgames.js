@@ -1,61 +1,52 @@
-const fs = require('fs');
-const fetch = require('node-fetch');
+const getgame = require('../getgame'),
+	{ SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
-	name: 'addgames',
-	aliases: ['ags'],
-	usage: '<website-name|id>',
-	description: 'adds the games you want to see their runs to the gamelist',
-	async execute(message, args) {
-		if (message.guild && !message.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only staff can change game');
-		let argz = args.join(' ').split('|');
-		argz = argz.map(x => x.replace(' ', '%20'))
-		const content = await fs.promises.readFile('./storage.json');
-		const storageObject = JSON.parse(content);
-		const objtype = message.guild ? message.guild.id : message.author.id
-		for (const x of argz) {
-			x = x.trim();
-			const errormsg = `are you sure https://www.speedrun.com/${x} exists
-||if it didn't work try deleting unnecessary spaces||`;
-			const res = await fetch(`https://www.speedrun.com/api/v1/games/${x}`);
-			let json = await res.json();
-			if (!json.data) {
-				const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${x}`);
-				let ajson = await ares.json();
-				if (!ajson.data) {
-					message.reply(eerrormsg);
-					continue;
-				}
-				if (ajson.data[0]) {
-					json.data = ajson.data.find(y => y.names.international == x.replace('%20', ' '))
-					if (!json.data) {
-						message.reply(errormsg);
-						continue;
-					}
-				} else {
-					json = ajson;
-					if (!json.data.id) {
-						message.reply(errormsg);
-						continue;
-					}
-				}
+	data: new SlashCommandBuilder().setName('addgames')
+		.setDescription('adds the games (seperated by "|") you want to see their runs to the gamelist')
+		.addStringOption(option =>
+			option.setName('game_names')
+				.setDescription('game names that you wanna add (seperated by "|")')
+				.setRequired(true)),
+	async execute(interaction, Guild, Game) {
+		await interaction.deferReply()
+		if (interaction.guild && !interaction.member.permissions.has("MANAGE_MESSAGES")) return interaction.editReply('only staff can change game');
+		let argz = interaction.options.getString('game_names', true).split('|').map(encodeURIComponent);
+		const channel = interaction.guild && interaction.guild.channels.cache.find(x => x.name == "new-runs");
+		const [guild, created] = await Guild.findOrCreate({
+			where: {
+				id: interaction.guild ? interaction.guild.id : interaction.user.id
+			},
+			defaults: {
+				channel: channel && channel.id || null,
+				isUser: !interaction.guild
 			}
-			const obj = { id: json.data.id, name: json.data.names.international, url: json.data.assets['cover-large'].uri };
-
-			if (storageObject[objtype] &&
-				storageObject[objtype].find(y => y.id == json.data.id)) {
-				message.reply('i can\'t add a game thats already in the list');
+		});
+		let games = [];
+		for (let x of argz) {
+			x = x.trim();
+			let json = await getgame(x, interaction);
+			if (!json) continue;
+			const [game,] = await Game.findOrCreate({
+				where: {
+					id: json.data.id
+				},
+				defaults: {
+					name: json.data.names.international,
+					url: json.data.assets['cover-large'].uri
+				}
+			}),
+				isGameInGuild = !created && await guild.hasGame(game);
+			if (isGameInGuild) {
+				interaction.channel.send('i can\'t add a game thats already in the list');
 				continue;
 			}
-
-			if (storageObject[objtype] instanceof Array) {
-				storageObject[objtype].push(obj);
-			} else {
-				storageObject[objtype] = [obj];
-			}
-			message.channel.send(`the game ${json.data.names.international} has been successfully added to the runlist`);
+			games.push(game)
+			interaction.channel.send(`the game ${json.data.names.international} has been successfully added to the runlist`);
 
 		}
-		await fs.promises.writeFile('./storage.json', JSON.stringify(storageObject));
+		await guild.addGames(games);
+		await interaction.editReply('Done!')
+
 
 	}
 };

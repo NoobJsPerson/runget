@@ -1,18 +1,23 @@
 {
-  "name": "RunGet",
+  "name": "runget",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "node deploy_commands.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "NoobJsPerson",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.5.1",
-    "express": "^4.17.1",
-    "node-fetch": "^2.6.1",
-    "dotenv": "10.0.0"
+    "@discordjs/builders": "^1.3.0",
+    "@discordjs/rest": "^1.3.0",
+    "discord-api-types": "^0.37.15",
+    "discord.js": "^13.10.3",
+    "dotenv": "10.0.0",
+    "node-fetch": "^2.6.7",
+    "sequelize": "^6.21.3",
+    "sqlite3": "^5.0.10"
   }
 }
