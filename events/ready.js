@@ -41,7 +41,6 @@ module.exports = {
 					const gameObj = games.find(x => x.id == newrun.game);
 					game = gameObj.name;
 					cover = gameObj.url;
-					console.log(__line);
 					for (let player of newrun.players) {
 						const userres = await fetch(`https://speedrun.com/api/v1/users/${player.id}`).catch(console.error);
 						if (!userres) continue;
