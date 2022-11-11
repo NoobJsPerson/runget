@@ -8,7 +8,7 @@ module.exports = {
 				.setDescription('The game you want to add')
 				.setRequired(true)),
 	async execute(interaction, Guild, Game) {
-		if (interaction.guild && !interaction.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only	staff	can	change	game');
+		if (interaction.guild && !interaction.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only	staff can change game');
 		const input = encodeURIComponent(interaction.options.getString('game_name', true));
 		console.log(input)
 		const json = await getgame(input, interaction);

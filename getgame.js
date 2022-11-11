@@ -1,5 +1,5 @@
 module.exports = async (input, interaction) => {
-    const errormsg = "please input a valid name, abbreviation or id";
+    const errormsg = "please input a valid name (case sensitive), abbreviation or id";
     const res = await fetch(`https://www.speedrun.com/api/v1/games/${input}`);
     let json = await res.json().catch();
     if (json.data) return json;
