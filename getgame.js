@@ -6,20 +6,20 @@ module.exports = async (input, interaction) => {
     const ares = await fetch(`https://www.speedrun.com/api/v1/games?name=${input}`);
     let ajson = await ares.json().catch();
     if (!ajson.data) {
-        interaction.reply(errormsg);
+        interaction.message.reply(errormsg);
         return;
     }
     if (ajson.data[0]) {
         json.data = ajson.data.find(x => x.names.international == decodeURIComponent(input))
         if (json.data) return json;
         else {
-            interaction.reply(errormsg);
+            interaction.message.reply(errormsg);
             return;
         }
     } else {
         if (ajson.data.id) return ajson;
         else {
-            interaction.reply(errormsg);
+            interaction.message.reply(errormsg);
             return;
         }
     }
