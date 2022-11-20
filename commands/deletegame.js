@@ -17,7 +17,7 @@ module.exports = {
 		if (!guild) return interaction.reply("i can't delete a game from a gamelist that's empty");
 		const input = decodeURIComponent(interaction.options.getString('game_name'));
 		const json = await getgame(input, interaction);
-		if (!json) return;
+		if (!json) return interaction.reply('\u200B');
 		const game = await Game.findOne({
 			where: {
 				id: json.data.id

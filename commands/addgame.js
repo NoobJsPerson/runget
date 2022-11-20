@@ -10,9 +10,8 @@ module.exports = {
 	async execute(interaction, Guild, Game) {
 		if (interaction.guild && !interaction.member.permissions.has("MANAGE_MESSAGES")) return message.reply('only	staff can change game');
 		const input = encodeURIComponent(interaction.options.getString('game_name', true));
-		console.log(input)
 		const json = await getgame(input, interaction);
-		if (!json) return;
+		if (!json) return interaction.reply('\u200B');
 		const [game,] = await Game.findOrCreate({
 			where: {
 				id: json.data.id
@@ -22,7 +21,7 @@ module.exports = {
 				url: json.data.assets['cover-large'].uri
 			}
 		}),
-			channel = interaction?.guild.channels.cache.find(x => x.name == "new-runs"),
+			channel = interaction.guild?.channels.cache.find(x => x.name == "new-runs") || interaction.user,
 			[guild, created] = await Guild.findOrCreate({
 				where: {
 					id: interaction.guild ? interaction.guild.id : interaction.user.id

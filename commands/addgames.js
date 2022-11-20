@@ -11,7 +11,7 @@ module.exports = {
 		await interaction.deferReply()
 		if (interaction.guild && !interaction.member.permissions.has("MANAGE_MESSAGES")) return interaction.editReply('only staff can change game');
 		let argz = interaction.options.getString('game_names', true).split('|').map(encodeURIComponent);
-		const channel = interaction.guild && interaction.guild.channels.cache.find(x => x.name == "new-runs");
+		const channel = interaction.guild?.channels.cache.find(x => x.name == "new-runs") || interaction.user;
 		const [guild, created] = await Guild.findOrCreate({
 			where: {
 				id: interaction.guild ? interaction.guild.id : interaction.user.id
