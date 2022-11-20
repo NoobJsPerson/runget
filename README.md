@@ -8,6 +8,7 @@ You can invite the official hosted version from [here](https://discord.com/api/o
 2. Make sure bot has permission to send messages and embeds
 3. Set the channel the bot will new runs in using /setchannel
 4. add the game(s) you want to see its/their runs using /addgame or /addgames 
+if you are in a server that the bot is in you could dm it and do step 4 directly!
 ## Commands
 - /addgame: adds the mentioned game into the gamelist
 - /addgames: same as /addgame but it can add multiple games when they're seperated by |
