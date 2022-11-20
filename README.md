@@ -1,13 +1,14 @@
 ## RunGet Bot
 RunGet is a discord bot that posts recent verified runs from Speedrun.com 
-You can invite the official hosted version from [here]<br>
-(https://discord.com/api/oauth2/authorize?client_id=754827405813743676&permissions=52224&scope=bot)
+You can invite the official hosted version from [here](https://discord.com/api/oauth2/authorize?client_id=754827405813743676&permissions=52224&scope=bot)
+<br>
 ![Screenshot of the embed](screenshots/Screenshot_20210307-135020-1.jpg)
 ## How to setup verified runs
 1. Invite the bot to your server (or host it from source code)
 2. Make sure bot has permission to send messages and embeds
 3. Set the channel the bot will new runs in using /setchannel
-4. add the game(s) you want to see its/their runs using /addgame or /addgames 
+4. add the game(s) you want to see its/their runs using /addgame or /addgames<br>
+if you are in a server that the bot is in you could dm it and do step 4 directly!
 ## Commands
 - /addgame: adds the mentioned game into the gamelist
 - /addgames: same as /addgame but it can add multiple games when they're seperated by |
