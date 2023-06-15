@@ -121,8 +121,8 @@ module.exports = {
 					});
 					if (!guilds.length) return
 					for (let guild of guilds) {
-						if (guild.isUser) client.users.cache.get(guild.id)?.send({ embeds: [embed] });
-						else client.channels.cache.get(guild.channel)?.send({ embeds: [embed] })
+						if (guild.isUser) client.users.cache.get(guild.id)?.send({ embeds: [embed] }).catch();
+						else client.channels.cache.get(guild.channel)?.send({ embeds: [embed] }).catch();
 					}
 
 				})
