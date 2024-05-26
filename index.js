@@ -14,11 +14,6 @@ const fs = require('fs'),
   }),
   // define the client for our discord bot
   client = new Client({
-    ws: {
-      properties: {
-        $browser: 'Discord Android'
-      }
-    },
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MESSAGES]
   }),
   // define the schemas for our tables
@@ -63,10 +58,12 @@ const fs = require('fs'),
   }, {
     timestamps: false
   });
+// I don't know if this a best practice but I'm going to use it to make the fetch function available globally
 global.fetch = fetch;
-// makes the tables if they don't exist, does nothing otherwise.
+// define the relationships between the tables
 Guild.belongsToMany(Game, { through: GuildGames });
 Game.belongsToMany(Guild, { through: GuildGames });
+// makes the tables if they don't exist, does nothing otherwise.
 sequelize.sync();
 // setGlobalDispatcher(new Agent({ connect: { timeout: 60_000 } }));
 ['cooldowns', 'events', 'commands', 'runs'].forEach(x => client[x] = new Collection());

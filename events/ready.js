@@ -132,6 +132,6 @@ module.exports = {
 			er = er.filter(x => client.runs.has(x.id));
 			// deleting unnecessary old runs
 		}, 75000);
-		// using setInterval to repeat the process every four minute
+		// using setInterval to repeat the process every minute and a quarter
 	}
 }
