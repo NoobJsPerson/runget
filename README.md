@@ -24,7 +24,7 @@ if you are in a server that the bot is in you could dm it and do step 4 directly
 * when hosting the bot from source code rename `.env.example` to `.env` and replace **yourtokenhere** by your bot token and **yourbotsidhere** by your bot's id.
 ## Credits
 Special thanks to:
-- dad infinitum#6805 the owner of the repository this bot is built on, check it out [here](https://github.com/slashinfty/run-get)
+- [slashinfty](https://github.com/slashinfty) The owner of the repository this bot is built on, check out an archived version of it [here](https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/slashinfty/run-get)
 - daanolav#6416 for the idea of caching game name and cover for less requests 
 - kyra#6348 for hosting the official version of the bot
 
