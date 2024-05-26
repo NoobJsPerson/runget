@@ -64,9 +64,8 @@ module.exports = {
 					runVariables.forEach(v => {
 						const foundVariable = variablesjson.data.find(c => c.id === v[0]);
 						if (foundVariable['is-subcategory'] === true) {
-							subcategoryName += !subcategoryName ? foundVariable.values.values[v[1]].label : ', ' + foundVariable.values.values[v[1]].label;
-							subcategoryQuery += !subcategoryQuery ? '?var-' + v[0] + '=' + v[1] : '&var-' + v[0] + '=' + v[1];
-
+							subcategoryName += (subcategoryName ? ', ' : '') + foundVariable.values.values[v[1]].label 
+							subcategoryQuery += `${subcategoryQuery ? '&' : '?'}var-${v[0]}=${v[1]}`;
 						}
 					});
 					// fetching subcategory data if found
