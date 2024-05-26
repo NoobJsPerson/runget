@@ -20,7 +20,7 @@ if you are in a server that the bot is in you could dm it and do step 4 directly
 - /invite: sends the bot's invite
 - /source: sends the link to this repository
 ## Notes
-* when using .addgame command you should pass the id, the abbreviation or game name (case sensitive)
+* when using /addgame command you should pass the id, the abbreviation or game name (case sensitive)
 * when hosting the bot from source code rename `.env.example` to `.env` and replace **yourtokenhere** by your bot token and **yourbotsidhere** by your bot's id.
 ## Credits
 Special thanks to:
