@@ -19,13 +19,40 @@ if you are in a server that the bot is in you could dm it and do step 4 directly
 - /setchannel: sets the channel the bot will send new runs in (if no channel was provided it'll be set to the current channel)
 - /invite: sends the bot's invite
 - /source: sends the link to this repository
+## Hosting
+First install Nodejs and Git
+Then open your terminal and clone the repo
+```bash
+git clone https://github.com/NoobJsPerson/runget
+```
+Enter it
+```bash
+cd runget
+```
+Then run
+```bash
+npm install
+```
+After that's done rename .env.example to .env
+```bash
+mv .env.example .env
+```
+Edit the new .env file replacing **yourtokenhere** by your bot token and **yourbotsidhere** by your bot's id.<br>
+Afterwards run the slash commands deploy script. (this only needs to be done once)
+```bash
+node deploy_commands.js
+```
+then you can run the bot
+```bash
+node index.js
+```
 ## Notes
 * when using /addgame command you should pass the id, the abbreviation or game name (case sensitive)
-* when hosting the bot from source code rename `.env.example` to `.env` and replace **yourtokenhere** by your bot token and **yourbotsidhere** by your bot's id.
 ## Credits
 Special thanks to:
 - [slashinfty](https://github.com/slashinfty) The owner of the repository this bot is built on, check out an archived version of it [here](https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/slashinfty/run-get)
 - daanolav#6416 for the idea of caching game name and cover for less requests 
-- kyra#6348 for hosting the official version of the bot
+- kyra#6348 for previously hosting the official version of the bot
 
 If you have any suggestions feel free to make an issue ;)
+
